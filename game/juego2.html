@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Juego 2 - Atención Selectiva</title>
+  <link rel="stylesheet" href="/css/juego2.css" />
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Atención Selectiva</h1>
+      <p class="hint">Encuentra las 3 <strong>X</strong> correctas por ronda. Tienes 3 selecciones por ronda. Presiona <kbd>ESC</kbd> para terminar.</p>
+    </header>
+
+    <section class="controls">
+      <button id="startBtn" class="btn primary">Iniciar juego (10 min)</button>
+      <button id="stopBtn" class="btn ghost" title="Detener juego (ESC)">Detener</button>
+    </section>
+
+    <section id="boardWrap" class="board-wrap">
+      <div id="board" class="board" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- Modal final (solo aparece al terminar) -->
+  <div id="resultModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <h2>Resultados finales</h2>
+      <div id="modalBody" class="modal-body"></div>
+      <div class="modal-actions">
+        <button id="restartBtn" class="btn primary">Reiniciar</button>
+        <button id="closeBtn" class="btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/script/juego2.js"></script>
+</body>
+</html>

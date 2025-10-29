@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego del Avioncito</title>
+  <link rel="stylesheet" href="/css/juego3.css">
+</head>
+<body>
+  <div id="game-container">
+    <div id="sky"></div>
+
+    <!-- Avión -->
+    <img id="plane" src="/images/avion.png" alt="Avión">
+
+    <!-- HUD -->
+    <div id="hud">
+      <p>⏱️ Tiempo: <span id="time">120</span> s</p>
+      <p>💰 Monedas: <span id="coins">0</span></p>
+    </div>
+
+    <!-- Pantalla final -->
+    <div id="end-screen" class="hidden">
+      <h2>✈️ Juego terminado</h2>
+      <p>Has recolectado <span id="final-coins">0</span> monedas</p>
+      <button id="restart">Reiniciar</button>
+    </div>
+  </div>
+
+  <script src="/script/juego3.js"></script>
+</body>
+</html>

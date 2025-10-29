@@ -1,0 +1,769 @@
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --accent: #ec4899;
+  --accent-light: #f472b6;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border: #475569;
+  --success: #10b981;
+  --warning: #f59e0b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sky-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Fondo degradado del cielo */
+.sky-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 50%, #ffe4e1 100%);
+}
+
+/* Contenedor de nubes */
+.clouds-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* Estilos base de las nubes */
+.cloud {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: -15px;
+}
+
+/* Puffs individuales que forman la nube */
+.cloud-puff {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Variaciones de tamaño y posición para cada nube */
+
+/* Nube 1: Pequeña y esponjosa */
+.cloud-1 {
+  width: 120px;
+  height: 50px;
+  animation: float-clouds 25s infinite linear;
+  top: 15%;
+}
+
+.cloud-1 .puff-1 {
+  width: 50px;
+  height: 50px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cloud-1 .puff-2 {
+  width: 60px;
+  height: 60px;
+  left: 30px;
+  top: -10px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.cloud-1 .puff-3 {
+  width: 50px;
+  height: 50px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Nube 2: Mediana y densa */
+.cloud-2 {
+  width: 180px;
+  height: 70px;
+  animation: float-clouds 28s infinite linear;
+  animation-delay: -5s;
+  top: 35%;
+}
+
+.cloud-2 .puff-1 {
+  width: 55px;
+  height: 55px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.cloud-2 .puff-2 {
+  width: 70px;
+  height: 70px;
+  left: 35px;
+  top: -15px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.cloud-2 .puff-3 {
+  width: 65px;
+  height: 65px;
+  left: 85px;
+  top: -10px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cloud-2 .puff-4 {
+  width: 55px;
+  height: 55px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* Nube 3: Grande y esponjosa */
+.cloud-3 {
+  width: 250px;
+  height: 90px;
+  animation: float-clouds 32s infinite linear;
+  animation-delay: -10s;
+  top: 55%;
+}
+
+.cloud-3 .puff-1 {
+  width: 60px;
+  height: 60px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.93);
+}
+
+.cloud-3 .puff-2 {
+  width: 75px;
+  height: 75px;
+  left: 40px;
+  top: -20px;
+  background: rgba(255, 255, 255, 0.87);
+}
+
+.cloud-3 .puff-3 {
+  width: 80px;
+  height: 80px;
+  left: 110px;
+  top: -25px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.cloud-3 .puff-4 {
+  width: 70px;
+  height: 70px;
+  left: 180px;
+  top: -15px;
+  background: rgba(255, 255, 255, 0.89);
+}
+
+.cloud-3 .puff-5 {
+  width: 60px;
+  height: 60px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.93);
+}
+
+/* Nube 4: Pequeña y alargada */
+.cloud-4 {
+  width: 140px;
+  height: 45px;
+  animation: float-clouds 26s infinite linear;
+  animation-delay: -15s;
+  top: 25%;
+}
+
+.cloud-4 .puff-1 {
+  width: 45px;
+  height: 45px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.91);
+}
+
+.cloud-4 .puff-2 {
+  width: 55px;
+  height: 55px;
+  left: 35px;
+  top: -8px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.cloud-4 .puff-3 {
+  width: 45px;
+  height: 45px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.91);
+}
+
+/* Nube 5: Mediana con forma irregular */
+.cloud-5 {
+  width: 200px;
+  height: 75px;
+  animation: float-clouds 30s infinite linear;
+  animation-delay: -20s;
+  top: 45%;
+}
+
+.cloud-5 .puff-1 {
+  width: 58px;
+  height: 58px;
+  left: 5px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.cloud-5 .puff-2 {
+  width: 68px;
+  height: 68px;
+  left: 40px;
+  top: -18px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.cloud-5 .puff-3 {
+  width: 62px;
+  height: 62px;
+  left: 105px;
+  top: -12px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cloud-5 .puff-4 {
+  width: 52px;
+  height: 52px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.93);
+}
+
+/* Nube 6: Grande y esponjosa */
+.cloud-6 {
+  width: 260px;
+  height: 95px;
+  animation: float-clouds 33s infinite linear;
+  animation-delay: -25s;
+  top: 65%;
+}
+
+.cloud-6 .puff-1 {
+  width: 62px;
+  height: 62px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.cloud-6 .puff-2 {
+  width: 78px;
+  height: 78px;
+  left: 42px;
+  top: -22px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.cloud-6 .puff-3 {
+  width: 85px;
+  height: 85px;
+  left: 115px;
+  top: -28px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.cloud-6 .puff-4 {
+  width: 72px;
+  height: 72px;
+  left: 185px;
+  top: -18px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.cloud-6 .puff-5 {
+  width: 62px;
+  height: 62px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+/* Nube 7: Pequeña y compacta */
+.cloud-7 {
+  width: 110px;
+  height: 48px;
+  animation: float-clouds 24s infinite linear;
+  animation-delay: -30s;
+  top: 20%;
+}
+
+.cloud-7 .puff-1 {
+  width: 48px;
+  height: 48px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cloud-7 .puff-2 {
+  width: 58px;
+  height: 58px;
+  left: 28px;
+  top: -10px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.cloud-7 .puff-3 {
+  width: 48px;
+  height: 48px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Nube 8: Mediana y delgada */
+.cloud-8 {
+  width: 190px;
+  height: 65px;
+  animation: float-clouds 29s infinite linear;
+  animation-delay: -35s;
+  top: 40%;
+}
+
+.cloud-8 .puff-1 {
+  width: 52px;
+  height: 52px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.91);
+}
+
+.cloud-8 .puff-2 {
+  width: 65px;
+  height: 65px;
+  left: 38px;
+  top: -12px;
+  background: rgba(255, 255, 255, 0.87);
+}
+
+.cloud-8 .puff-3 {
+  width: 60px;
+  height: 60px;
+  left: 100px;
+  top: -8px;
+  background: rgba(255, 255, 255, 0.89);
+}
+
+.cloud-8 .puff-4 {
+  width: 52px;
+  height: 52px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.91);
+}
+
+/* Nube 9: Grande con forma única */
+.cloud-9 {
+  width: 270px;
+  height: 100px;
+  animation: float-clouds 34s infinite linear;
+  animation-delay: -40s;
+  top: 70%;
+}
+
+.cloud-9 .puff-1 {
+  width: 65px;
+  height: 65px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.93);
+}
+
+.cloud-9 .puff-2 {
+  width: 80px;
+  height: 80px;
+  left: 45px;
+  top: -25px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.cloud-9 .puff-3 {
+  width: 88px;
+  height: 88px;
+  left: 120px;
+  top: -30px;
+  background: rgba(255, 255, 255, 0.83);
+}
+
+.cloud-9 .puff-4 {
+  width: 75px;
+  height: 75px;
+  left: 190px;
+  top: -20px;
+  background: rgba(255, 255, 255, 0.87);
+}
+
+.cloud-9 .puff-5 {
+  width: 65px;
+  height: 65px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.93);
+}
+
+/* Nube 10: Pequeña y redonda */
+.cloud-10 {
+  width: 130px;
+  height: 55px;
+  animation: float-clouds 27s infinite linear;
+  animation-delay: -45s;
+  top: 30%;
+}
+
+.cloud-10 .puff-1 {
+  width: 52px;
+  height: 52px;
+  left: 0;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.cloud-10 .puff-2 {
+  width: 62px;
+  height: 62px;
+  left: 32px;
+  top: -12px;
+  background: rgba(255, 255, 255, 0.87);
+}
+
+.cloud-10 .puff-3 {
+  width: 52px;
+  height: 52px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* Animación de desplazamiento infinito */
+@keyframes float-clouds {
+  0% {
+    left: -300px;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    left: 100vw;
+    opacity: 0;
+  }
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .cloud {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 480px) {
+  .cloud {
+    transform: scale(0.6);
+  }
+}
+
+
+.container {
+  text-align: center;
+  z-index: 10;
+}
+
+/* Radar principal */
+.radar-container {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #a5e2ea 0%, #3b3e42 100%);
+  box-shadow: 0 0 40px rgba(122, 213, 229, 0.4);
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* Líneas del radar */
+.radar-lines {
+  position: absolute;
+  inset: 0;
+}
+.radar-lines::before,
+.radar-lines::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+}
+.radar-lines::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+.radar-lines::after {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+}
+.circle {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.circle:nth-child(1) { width: 120px; height: 120px; top: 50%; left: 50%; }
+.circle:nth-child(2) { width: 240px; height: 240px; top: 50%; left: 50%; }
+.circle:nth-child(3) { width: 360px; height: 360px; top: 50%; left: 50%; }
+.circle:nth-child(4) { width: 480px; height: 480px; top: 50%; left: 50%; }
+
+/* Punto central */
+.center-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #5ba8cf;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px #91e5e5;
+}
+
+/* Barrido del radar */
+.sweep {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(
+    rgba(186, 228, 186, 0.4),
+    rgba(0, 255, 0, 0.05) 40%,
+    transparent 80%
+  );
+  border-radius: 50%;
+  transform-origin: center center;
+  animation: rotate 3s linear infinite;
+  opacity: 0.9;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Aparición progresiva */
+@keyframes appearFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+    filter: blur(6px);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.3);
+    filter: blur(1px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(4px);
+  }
+}
+
+/* Puntos animados */
+.dot {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 0 25px currentColor, 0 0 12px currentColor inset;
+  animation: appearFade 1.6s ease-in-out forwards;
+}
+
+/* Botón de inicio */
+.start-btn {
+  margin-top: 25px;
+  background: #6abccc;
+  color: #0a0c0f;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
+  transition: 0.3s;
+}
+.start-btn:hover {
+  background: #00ffaa;
+  transform: scale(1.05);
+}
+
+/* Modal animado */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  animation: fadeInModal 0.5s ease;
+  z-index: 10000;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #1c2127, #0f1113);
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(0, 255, 100, 0.4);
+  text-align: center;
+  transform: scale(0.9);
+  animation: popUp 0.4s ease forwards;
+}
+
+@keyframes popUp {
+  to { transform: scale(1); }
+}
+
+.modal-header h2 {
+  margin-bottom: 20px;
+  color: #00ff88;
+  text-shadow: 0 0 8px #00ff88;
+}
+
+.modal-body p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.modal-body strong {
+  font-size: 1.4rem;
+  color: #00ffcc;
+}
+
+.modal-footer button {
+  background: #00ff88;
+  color: #0a0c0f;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+.modal-footer button:hover {
+  background: #00ffaa;
+  transform: scale(1.05);
+}
+
+
+/* Contenedor principal: centra todo vertical y horizontalmente */
+.main-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;    /* Centra horizontalmente */
+  justify-content: space-around; /* Centra verticalmente */
+  min-height: 100vh;      /* Ocupa toda la altura de la pantalla */
+  width: 80%;
+  overflow: hidden;
+  margin-right: 200px;
+  z-index: 5;
+}
+
+/* Contenedor del radar y botón */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 300px;
+}
+
+/* Contenedor del dino */
+.dino-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Ajuste opcional del botón */
+.start-btn {
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+
+
+.dino-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mensaje tipo burbuja */
+.dino-message {
+  position: absolute;
+  
+  display: flex;
+  margin-top: -150px;
+  top:20%; /* ajusta según la altura del dino */
+  background: white;
+  color: #333;
+  padding: 0.75rem 1.25rem;
+  border-radius: 1rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 250px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Flechita del globo */
+.dino-message::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+/* Estado visible del mensaje */
+.dino-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}

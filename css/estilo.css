@@ -1,0 +1,502 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --accent: #ec4899;
+  --accent-light: #f472b6;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border: #475569;
+  --success: #10b981;
+  --warning: #f59e0b;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Fondo animado con partículas */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contenedor-principal {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+/* Added container for title and character with flexbox layout */
+.titulo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: slideInDown 0.8s ease-out;
+  letter-spacing: -1px;
+}
+
+/* Animated character styles */
+.character {
+  width: 100px;
+  height: 140px;
+  position: relative;
+  animation: characterBounce 2s ease-in-out infinite;
+}
+
+.character-head {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+}
+
+.character-eyes {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 5px;
+}
+
+.eye {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: eyeBlink 3s ease-in-out infinite;
+}
+
+.eye:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.character-mouth {
+  width: 15px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: mouthSmile 2s ease-in-out infinite;
+}
+
+.character-body {
+  width: 30px;
+  height: 35px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 10px;
+  position: absolute;
+  top: 50px;
+  left: 35px;
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+}
+
+.character-arms {
+  position: absolute;
+  top: 55px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+
+.arm {
+  width: 12px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  border-radius: 6px;
+  transform-origin: top center;
+}
+
+.left-arm {
+  animation: armWaveLeft 1.5s ease-in-out infinite;
+}
+
+.right-arm {
+  animation: armWaveRight 1.5s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+.character-legs {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.leg {
+  width: 10px;
+  height: 25px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  border-radius: 5px;
+  animation: legKick 1.5s ease-in-out infinite;
+}
+
+.leg:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 60px;
+  animation: fadeIn 1s ease-out 0.3s both;
+  font-weight: 300;
+}
+
+.contenedor-juegos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideInUp 0.8s ease-out;
+  animation-fill-mode: both;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.icon-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.3));
+  border: 2px solid var(--primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  z-index: 3;
+  animation: float 3s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+}
+
+.card:nth-child(1) .icon-badge {
+  animation-delay: 0s;
+}
+.card:nth-child(2) .icon-badge {
+  animation-delay: 0.5s;
+}
+.card:nth-child(3) .icon-badge {
+  animation-delay: 1s;
+}
+
+.card:hover .icon-badge {
+  animation: pulse 0.6s ease-in-out;
+}
+
+/* Efecto de brillo en los bordes */
+.card {
+  position: relative;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(99, 102, 241, 0.1) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+.card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+  z-index: 2;
+}
+
+.card:hover::before {
+  left: 100%;
+}
+
+.card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3), 0 0 40px rgba(236, 72, 153, 0.2);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.6s ease;
+  filter: brightness(0.9);
+  border-radius: 20px;
+}
+
+.card:hover img {
+  transform: scale(1.1) rotate(2deg);
+  filter: brightness(1.1);
+}
+
+/* Animaciones */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Character animations */
+@keyframes characterBounce {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes eyeBlink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes mouthSmile {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.3);
+  }
+}
+
+@keyframes armWaveLeft {
+  0%,
+  100% {
+    transform: rotate(-20deg);
+  }
+  50% {
+    transform: rotate(45deg);
+  }
+}
+
+@keyframes armWaveRight {
+  0%,
+  100% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(-45deg);
+  }
+}
+
+@keyframes legKick {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  .character {
+    width: 80px;
+    height: 120px;
+  }
+
+  .character-head {
+    width: 40px;
+    height: 40px;
+    left: 20px;
+  }
+
+  .character-body {
+    width: 25px;
+    height: 30px;
+    top: 42px;
+    left: 27.5px;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  .contenedor-juegos {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .card {
+    margin: 0 auto;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .contenedor-principal {
+    padding: 40px 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .titulo-container {
+    gap: 15px;
+  }
+
+  .character {
+    width: 60px;
+    height: 100px;
+  }
+
+  .character-head {
+    width: 35px;
+    height: 35px;
+    left: 12.5px;
+  }
+
+  .character-body {
+    width: 20px;
+    height: 25px;
+    top: 37px;
+    left: 20px;
+  }
+}
+
+
+.card.clicked {
+  transform: scale(0.95);
+  transition: transform 0.2s ease;
+}
+
+
