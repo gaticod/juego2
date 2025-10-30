@@ -15,10 +15,19 @@ let gameRunning = false;
 
 // Calcular posición aleatoria dentro del radar
 function randomPosition(radius) {
+  // Calculamos usando el tamaño real del contenedor radar para que
+  // las coordenadas sean siempre relativas al centro y no salgan del círculo.
+  const width = radar.clientWidth;
+  const height = radar.clientHeight;
+  const centerX = width / 2;
+  const centerY = height / 2;
+
+  // Distancia con distribución uniforme dentro del círculo
   const angle = Math.random() * 2 * Math.PI;
-  const r = radius * (0.4 + Math.random() * 0.6);
-  const x = 260 + r * Math.cos(angle);
-  const y = 260 + r * Math.sin(angle);
+  const r = Math.sqrt(Math.random()) * radius; // sqrt para distribución homogénea
+  const x = centerX + r * Math.cos(angle);
+  const y = centerY + r * Math.sin(angle);
+
   return { x, y };
 }
 
@@ -28,20 +37,28 @@ function createDot() {
 
   const colors = ['blue', 'yellow', 'green'];
   const color = colors[Math.floor(Math.random() * colors.length)];
-  const pos = randomPosition(220);
+
+  // Calculamos radio efectivo: usamos la mitad del menor lado (ancho/alto)
+  // y restamos un pequeño margen para que el punto nunca toque el borde.
+  const radarRadius = Math.min(radar.clientWidth, radar.clientHeight) / 2 - 20;
+  const pos = randomPosition(radarRadius);
 
   const dot = document.createElement('div');
   dot.classList.add('dot');
   dot.style.background = color;
+
+  // Posición relativa al contenedor (.radar-container) en px
+  // Aseguramos que la posición use translate(-50%,-50%) en CSS para centrar el punto
   dot.style.left = `${pos.x}px`;
   dot.style.top = `${pos.y}px`;
+  dot.style.position = 'absolute';
 
   radar.appendChild(dot);
   activeColor = color;
 
   // Eliminar el punto después de 1.6s y crear otro
   setTimeout(() => {
-    dot.remove();
+    if (dot && dot.parentElement) dot.remove();
     if (gameRunning) createDot();
   }, 1600);
 }
