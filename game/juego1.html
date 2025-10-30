@@ -10,99 +10,62 @@
 </head>
 <body>
 
-<div class="sky-container">
-        <!-- Capa de fondo degradado -->
-        <div class="sky-background"></div>
-        
-        <!-- Contenedor de nubes -->
-        <div class="clouds-container">
-            <!-- Nube 1: Pequeña y esponjosa -->
-            <div class="cloud cloud-1">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-            </div>
-            
-            <!-- Nube 2: Mediana y densa -->
-            <div class="cloud cloud-2">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-                <div class="cloud-puff puff-4"></div>
-            </div>
-            
-            <!-- Nube 3: Grande y esponjosa -->
-            <div class="cloud cloud-3">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-                <div class="cloud-puff puff-4"></div>
-                <div class="cloud-puff puff-5"></div>
-            </div>
-            
-            <!-- Nube 4: Pequeña y alargada -->
-            <div class="cloud cloud-4">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-            </div>
-            
-            <!-- Nube 5: Mediana con forma irregular -->
-            <div class="cloud cloud-5">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-                <div class="cloud-puff puff-4"></div>
-            </div>
-            
-            <!-- Nube 6: Grande y esponjosa -->
-            <div class="cloud cloud-6">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-                <div class="cloud-puff puff-4"></div>
-                <div class="cloud-puff puff-5"></div>
-            </div>
-            
-            <!-- Nube 7: Pequeña y compacta -->
-            <div class="cloud cloud-7">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-            </div>
-            
-            <!-- Nube 8: Mediana y delgada -->
-            <div class="cloud cloud-8">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-                <div class="cloud-puff puff-4"></div>
-            </div>
-            
-            <!-- Nube 9: Grande con forma única -->
-            <div class="cloud cloud-9">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-                <div class="cloud-puff puff-4"></div>
-                <div class="cloud-puff puff-5"></div>
-            </div>
-            
-            <!-- Nube 10: Pequeña y redonda -->
-            <div class="cloud cloud-10">
-                <div class="cloud-puff puff-1"></div>
-                <div class="cloud-puff puff-2"></div>
-                <div class="cloud-puff puff-3"></div>
-            </div>
-        </div>
+   <!-- Flecha de retorno -->
+  <section class="arrow" id="arrowSection">
+    <lottie-player 
+      src="../animations/arrow.json"
+      background="transparent"
+      speed="0.5"
+      loop
+      autoplay>
+    </lottie-player>
+    <a href="../index.html" title="Volver al Inicio" class="arrow-overlay" id="arrowLink"></a>
+  </section>
 
-
-   
-  <!-- Modal del astronauta -->
-  <div id="modalConsejero" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-md text-center relative animate__animated animate__fadeIn">
+  <!-- Cielo con nubes -->
+  <div class="sky-container">
+    <div class="sky-background"></div>
+    
+    <div class="clouds-container">
+      <div class="cloud cloud-1">
+        <div class="cloud-puff puff-1"></div>
+        <div class="cloud-puff puff-2"></div>
+        <div class="cloud-puff puff-3"></div>
+      </div>
       
-      <!-- Animación del astronauta -->
+      <div class="cloud cloud-2">
+        <div class="cloud-puff puff-1"></div>
+        <div class="cloud-puff puff-2"></div>
+        <div class="cloud-puff puff-3"></div>
+        <div class="cloud-puff puff-4"></div>
+      </div>
+      
+      <div class="cloud cloud-3">
+        <div class="cloud-puff puff-1"></div>
+        <div class="cloud-puff puff-2"></div>
+        <div class="cloud-puff puff-3"></div>
+        <div class="cloud-puff puff-4"></div>
+        <div class="cloud-puff puff-5"></div>
+      </div>
+      
+      <div class="cloud cloud-4">
+        <div class="cloud-puff puff-1"></div>
+        <div class="cloud-puff puff-2"></div>
+        <div class="cloud-puff puff-3"></div>
+      </div>
+      
+      <div class="cloud cloud-5">
+        <div class="cloud-puff puff-1"></div>
+        <div class="cloud-puff puff-2"></div>
+        <div class="cloud-puff puff-3"></div>
+        <div class="cloud-puff puff-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal del consejero -->
+  <div id="modalConsejero" class="modal-backdrop">
+    <div class="modal-consejero">
       <lottie-player 
         src="../animations/dino.json"
         background="transparent"
@@ -112,66 +75,60 @@
         autoplay>
       </lottie-player>
       
-      <h2 class="text-2xl font-bold text-gray-800 mt-4">¡Hola, explorador!</h2>
-      <p class="text-gray-600 mt-2">Recuerda revisar tus recursos antes de cada misión. La estrategia es la clave del éxito 🚀</p>
+      <h2>¡Hola, explorador! 🚀</h2>
+      <p>Recuerda revisar tus recursos antes de cada misión. La estrategia es la clave del éxito. ¡Mantén tu atención sostenida!</p>
       
-      <button id="cerrarModal" class="mt-6 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-        ¡Entendido!
-      </button>
+      <button id="cerrarModal">¡Entendido!</button>
     </div>
   </div>
 
-<div class="main-wrapper">
-  <div class="container">
-    <div class="radar-container">
-      <div class="radar-lines">
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+  <!-- Contenido principal del juego -->
+  <div class="main-wrapper">
+    <div class="container">
+      <div class="radar-container">
+        <div class="radar-lines">
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+          <div class="circle"></div>
+        </div>
+        <div class="center-dot"></div>
+        <div class="sweep"></div>
       </div>
-      <div class="center-dot"></div>
-      <div class="sweep"></div>
+
+      <button id="startBtn" class="start-btn">🎮 Iniciar Juego</button>
     </div>
 
-    <button id="startBtn" class="start-btn">Iniciar Juego</button>
-  </div>
+    <div class="dino-container">
+      <div class="dino-animation">
+        <lottie-player
+          src="../animations/dino.json"
+          background="transparent"
+          speed="1"
+          style="width: 400px; height: 400px;"
+          loop
+          autoplay>
+        </lottie-player>
+      </div>
 
-  <div class="dino-container">
-    <div class="dino-animation">
-      <lottie-player
-        src="../animations/dino.json"
-        background="transparent"
-        speed="1"
-        style="width: 400px; height: 400px;"
-        loop
-        autoplay>
-      </lottie-player>
-    </div>
-
-    <!-- Mensaje flotante -->
-    <div id="dinoMessage" class="dino-message">
-      <p>Presiona espacio cuando veas el círculo azul 🟦</p>
-      <span class="dino-pointer"></span>
+      <div id="dinoMessage" class="dino-message">
+        <p>Presiona espacio cuando veas el círculo azul 🟦</p>
+        <span class="dino-pointer"></span>
+      </div>
     </div>
   </div>
 
-</div>
-
-
-
-
-  <!-- MODAL -->
+  <!-- Modal de resultados -->
   <div id="resultModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2>🧠 Resultado del Test</h2>
       </div>
       <div class="modal-body">
-        <p id="resultText"></p>
+        <p id="resultText">Tu resultado aparecerá aquí...</p>
       </div>
       <div class="modal-footer">
-        <button id="restartBtn">Reiniciar Juego</button>
+        <button id="restartBtn">🔄 Reiniciar Juego</button>
       </div>
     </div>
   </div>
@@ -179,5 +136,14 @@
 </div>
 
   <script src="../script/juego1.js"></script>
+
+  <script>
+    // forzar la redirección incluso si hay scripts que bloquean los enlaces
+    const arrowLink = document.getElementById('arrowLink');
+    arrowLink.addEventListener('click', (e) => {
+      e.stopPropagation(); // evita que otro JS intercepte el click
+      window.location.href = arrowLink.getAttribute('href');
+    });
+  </script>
 </body>
 </html>
