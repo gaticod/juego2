@@ -24,7 +24,7 @@ body, html {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #8fd3f4, #fbc2eb);
+  background: linear-gradient(to bottom, #a6d8ff, #f7f9ff);
   overflow: hidden;
 }
 
@@ -36,7 +36,7 @@ body, html {
   box-shadow:
     30px 10px 0 0 rgba(255,255,255,0.9),
     60px 10px 0 0 rgba(255,255,255,0.9);
-  opacity: 0.9;
+  opacity: 0.85;
   animation: moveClouds linear infinite;
 }
 
@@ -45,9 +45,9 @@ body, html {
   to { transform: translateX(-120vw); }
 }
 
-.cloud.small { width: 60px; height: 40px; animation-duration: 60s; }
-.cloud.medium { width: 100px; height: 60px; animation-duration: 90s; }
-.cloud.large { width: 160px; height: 90px; animation-duration: 120s; }
+.cloud.small { width: 70px; height: 40px; animation-duration: 70s; }
+.cloud.medium { width: 120px; height: 70px; animation-duration: 100s; }
+.cloud.large { width: 180px; height: 100px; animation-duration: 130s; }
 
 /* ======== AVIÓN ======== */
 #plane {
@@ -73,12 +73,17 @@ body, html {
   background: radial-gradient(circle, #ffda44 40%, #f8b400 90%);
   border-radius: 50%;
   border: 2px solid #ffd700;
-  animation: moveCoin linear forwards;
+  animation: moveCoin 10s linear forwards, spin 1s linear infinite;
 }
 
 @keyframes moveCoin {
   from { transform: translateX(110vw); }
   to { transform: translateX(-120vw); }
+}
+
+@keyframes spin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
 }
 
 /* ======== AVES ======== */
@@ -89,8 +94,8 @@ body, html {
 }
 
 @keyframes flyAcross {
-  from { transform: translateX(110vw) scaleX(1); }
-  to { transform: translateX(-120vw) scaleX(1); }
+  from { transform: translateX(110vw); }
+  to { transform: translateX(-120vw); }
 }
 
 /* ======== HUD ======== */
@@ -114,7 +119,7 @@ body, html {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.9);
   display: flex;
   flex-direction: column;
   align-items: center;

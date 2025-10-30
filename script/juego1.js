@@ -9,6 +9,7 @@ const startBtn = document.getElementById('startBtn');
 
 let attempts = 0;
 let hits = 0;
+let bad = 0;
 let activeColor = null;
 let gameRunning = false;
 
@@ -51,7 +52,12 @@ document.addEventListener('keydown', (e) => {
 
   if (e.code === 'Space') {
     attempts++;
-    if (activeColor === 'blue') hits++;
+
+    if (activeColor === 'blue') {
+      hits++;
+    } else if (activeColor === 'yellow' || activeColor === 'green') {
+      bad++;
+    }
   }
 
   if (e.code === 'Escape') {
@@ -79,6 +85,7 @@ function showResults() {
   resultText.innerHTML = `
     <strong>Intentos:</strong> ${attempts}<br>
     <strong>Aciertos:</strong> ${hits}<br>
+    <strong>Erróneos:</strong> ${bad}<br>
     <strong style="color:${levelColor}">Nivel de Atención: ${level}</strong>
   `;
 
@@ -91,86 +98,87 @@ restartBtn.addEventListener('click', () => location.reload());
 startBtn.addEventListener('click', startGame);
 
 
- document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("modalConsejero");
-    const btnCerrar = document.getElementById("cerrarModal");
+// =============================
+// 🧠 MODAL CONSEJERO
+// =============================
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("modalConsejero");
+  const btnCerrar = document.getElementById("cerrarModal");
 
-    // Mostrar el modal automáticamente al cargar la página
-    modal.classList.remove("hidden");
+  // Mostrar el modal automáticamente al cargar la página
+  modal.classList.remove("hidden");
 
-    // Función para cerrar el modal
-    const cerrarModal = () => {
-      modal.classList.add("animate__fadeOut");
-      modal.classList.remove("animate__fadeIn");
+  // Función para cerrar el modal
+  const cerrarModal = () => {
+    modal.classList.add("animate__fadeOut");
+    modal.classList.remove("animate__fadeIn");
 
-      // Esperar la animación antes de ocultarlo
-      setTimeout(() => {
-        modal.classList.add("hidden");
-        modal.classList.remove("animate__fadeOut");
-      }, 400); // Duración de la animación (en ms)
-    };
+    // Esperar la animación antes de ocultarlo
+    setTimeout(() => {
+      modal.classList.add("hidden");
+      modal.classList.remove("animate__fadeOut");
+    }, 400);
+  };
 
-    // Cerrar al hacer clic en el botón
-    btnCerrar.addEventListener("click", cerrarModal);
+  // Cerrar al hacer clic en el botón
+  btnCerrar.addEventListener("click", cerrarModal);
 
-    // Cerrar al presionar Enter
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        cerrarModal();
-      }
+  // Cerrar al presionar Enter
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") cerrarModal();
+  });
+});
+
+
+// =============================
+// 💬 MENSAJES DINÁMICOS DEL DINO
+// =============================
+document.addEventListener("DOMContentLoaded", () => {
+  const mensajes = [
+    "Presiona espacio cuando veas el círculo azul 🟦",
+    "Concéntrate... ¡El radar está buscando objetivos! 🎯",
+    "Excelente reflejo 🚀",
+    "Mantente atento 👀",
+    "Recuerda: la velocidad y precisión son clave ⚡"
+  ];
+
+  const dinoMessage = document.getElementById("dinoMessage");
+  let index = 0;
+
+  // Función para mostrar el mensaje
+  const mostrarMensaje = () => {
+    dinoMessage.classList.remove("show");
+    setTimeout(() => {
+      dinoMessage.querySelector("p").textContent = mensajes[index];
+      dinoMessage.classList.add("show");
+      index = (index + 1) % mensajes.length;
+    }, 600);
+  };
+
+  mostrarMensaje();
+  setInterval(mostrarMensaje, 5000);
+});
+
+
+// =============================
+// ☁️ SISTEMA DE NUBES ANIMADAS
+// =============================
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("[v0] Sistema de nubes animadas cargado correctamente");
+
+  const clouds = document.querySelectorAll(".cloud");
+
+  clouds.forEach((cloud, index) => {
+    cloud.setAttribute("data-cloud-index", index + 1);
+
+    cloud.addEventListener("mouseenter", function () {
+      this.style.filter = "drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15))";
+    });
+
+    cloud.addEventListener("mouseleave", function () {
+      this.style.filter = "drop-shadow(0 4px 15px rgba(0, 0, 0, 0.1))";
     });
   });
 
-    document.addEventListener("DOMContentLoaded", () => {
-    const mensajes = [
-      "Presiona espacio cuando veas el círculo azul 🟦",
-      "Concéntrate... ¡El radar está buscando objetivos! 🎯",
-      "Excelente reflejo, explorador. 🚀",
-      "Mantente atento, el siguiente aparecerá pronto 👀",
-      "Recuerda: la velocidad y precisión son clave ⚡"
-    ];
-
-    const dinoMessage = document.getElementById("dinoMessage");
-    let index = 0;
-
-    // Función para mostrar el mensaje
-    const mostrarMensaje = () => {
-      dinoMessage.classList.remove("show"); // Oculta suavemente
-      setTimeout(() => {
-        dinoMessage.querySelector("p").textContent = mensajes[index];
-        dinoMessage.classList.add("show"); // Muestra suavemente
-        index = (index + 1) % mensajes.length; // Avanza al siguiente
-      }, 600); // espera la animación de salida
-    };
-
-    // Mostrar mensaje inicial
-    mostrarMensaje();
-
-    // Cambiar cada 5 segundos
-    setInterval(mostrarMensaje, 5000);
-  });
-
-  // Script para mejorar la animación y agregar interactividad opcional
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("[v0] Sistema de nubes animadas cargado correctamente")
-
-  // Obtener todas las nubes
-  const clouds = document.querySelectorAll(".cloud")
-
-  // Agregar efecto de sombra dinámica basado en la posición
-  clouds.forEach((cloud, index) => {
-    // Agregar atributo data para tracking
-    cloud.setAttribute("data-cloud-index", index + 1)
-
-    // Opcional: Agregar efecto de hover
-    cloud.addEventListener("mouseenter", function () {
-      this.style.filter = "drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15))"
-    })
-
-    cloud.addEventListener("mouseleave", function () {
-      this.style.filter = "drop-shadow(0 4px 15px rgba(0, 0, 0, 0.1))"
-    })
-  })
-
-  console.log(`[v0] ${clouds.length} nubes animadas inicializadas`)
-})
+  console.log(`[v0] ${clouds.length} nubes animadas inicializadas`);
+});

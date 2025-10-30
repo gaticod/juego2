@@ -1,3 +1,4 @@
+// juego3.js (versión corregida — movimiento de monedas por JS para colisiones fiables)
 const sky = document.getElementById("sky");
 const plane = document.getElementById("plane");
 const coinsDisplay = document.getElementById("coins");
@@ -14,8 +15,13 @@ let coins = 0;
 let timeLeft = 120; // 2 minutos
 let gameRunning = true;
 
-// === CREAR NUBES ===
+// arrays para limpiar intervalos si es necesario
+const coinIntervals = new Set();
+const coinMoves = new Set();
+
+// --- NUBES (sin cambios) ---
 function createCloud() {
+  if (!gameRunning) return;
   const cloud = document.createElement("div");
   const sizes = ["small", "medium", "large"];
   const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
@@ -24,10 +30,10 @@ function createCloud() {
   sky.appendChild(cloud);
   setTimeout(() => cloud.remove(), 130000);
 }
-setInterval(createCloud, 5000);
-for (let i = 0; i < 5; i++) createCloud();
+setInterval(createCloud, 8000);
+for (let i = 0; i < 4; i++) createCloud();
 
-// === CREAR AVES ===
+// --- AVES (sin cambios) ---
 function createBird() {
   if (!gameRunning) return;
   const bird = document.createElement("img");
@@ -38,41 +44,77 @@ function createBird() {
   sky.appendChild(bird);
   setTimeout(() => bird.remove(), 20000);
 }
-setInterval(createBird, 15000);
+setInterval(createBird, 20000);
 
-// === CREAR MONEDAS ===
+// --- MONEDAS: ahora MOVIMIENTO por JS para evitar problemas de colisión ---
 function createCoin() {
   if (!gameRunning) return;
+
   const coin = document.createElement("div");
   coin.classList.add("coin");
-  coin.style.top = Math.random() * 80 + "%";
+  // posición vertical aleatoria; posición horizontal inicial fuera a la derecha
+  const topPos = Math.random() * 80;
+  coin.style.top = topPos + "vh"; // usamos vh para quedar bien con diferentes tamaños
+  let posX = window.innerWidth + 20; // px, comienza fuera de pantalla
+  coin.style.left = posX + "px";
   sky.appendChild(coin);
 
-  const move = setInterval(() => {
+  // velocidad aleatoria ligera
+  const speed = 3 + Math.random() * 3; // px por tick
+
+  // mover la moneda con setInterval (control total)
+  const moveId = setInterval(() => {
     if (!gameRunning) return;
+    posX -= speed;
+    coin.style.left = posX + "px";
+
+    // comprobación de colisión
     const coinRect = coin.getBoundingClientRect();
     const planeRect = plane.getBoundingClientRect();
+
     if (
       coinRect.left < planeRect.right &&
       coinRect.right > planeRect.left &&
       coinRect.top < planeRect.bottom &&
       coinRect.bottom > planeRect.top
     ) {
+      // moneda recogida
       coins++;
-      coinsDisplay.textContent = coins;
+      if (coinsDisplay) coinsDisplay.textContent = coins;
+      // efecto visual rápido (opcional): scale antes de quitar
       coin.remove();
-      clearInterval(move);
+      clearInterval(moveId);
+      coinMoves.delete(moveId);
+      return;
     }
-  }, 50);
 
-  setTimeout(() => {
-    coin.remove();
-    clearInterval(move);
-  }, 15000);
+    // si ya salió por la izquierda, limpiamos
+    if (posX < -100) {
+      coin.remove();
+      clearInterval(moveId);
+      coinMoves.delete(moveId);
+      return;
+    }
+  }, 25);
+
+  // guardamos para limpiar si se acaba el juego
+  coinMoves.add(moveId);
+
+  // seguridad: eliminar moneda si algo falla (10s)
+  const killId = setTimeout(() => {
+    try { coin.remove(); } catch {}
+    clearInterval(moveId);
+    coinMoves.delete(moveId);
+    coinIntervals.delete(killId);
+  }, 10000);
+  coinIntervals.add(killId);
 }
-setInterval(createCoin, 10000);
 
-// === MOVIMIENTO DEL AVIÓN CON INERCIA ===
+// Inicia las monedas cada 10s y una al inicio
+createCoin();
+const coinSpawner = setInterval(createCoin, 10000);
+
+// --- MOVIMIENTO DEL AVIÓN ---
 document.addEventListener("keydown", (e) => {
   if (!gameRunning) return;
   const speed = 2;
@@ -88,7 +130,7 @@ document.addEventListener("keyup", (e) => {
   if (["ArrowLeft", "ArrowRight"].includes(e.key)) velocityX = 0;
 });
 
-// === LOOP DE MOVIMIENTO ===
+// --- LOOP DE MOVIMIENTO ---
 function updatePlane() {
   if (!gameRunning) return;
   planeY += velocityY * 5;
@@ -105,21 +147,33 @@ function updatePlane() {
 }
 updatePlane();
 
-// === CONTADOR DE TIEMPO ===
+// --- CONTADOR DE TIEMPO ---
 const timer = setInterval(() => {
   if (!gameRunning) return;
   timeLeft--;
-  timeDisplay.textContent = timeLeft;
+  if (timeDisplay) timeDisplay.textContent = timeLeft;
   if (timeLeft <= 0) endGame();
 }, 1000);
 
-// === FIN DEL JUEGO ===
+// --- FIN DEL JUEGO ---
 function endGame() {
+  if (!gameRunning) return;
   gameRunning = false;
+
+  // limpiar intervalos de monedas y spawn
   clearInterval(timer);
+  clearInterval(coinSpawner);
+  coinIntervals.forEach(id => clearTimeout(id));
+  coinMoves.forEach(id => clearInterval(id));
+  coinIntervals.clear();
+  coinMoves.clear();
+
+  // mostrar pantalla final
   endScreen.classList.remove("hidden");
   finalCoins.textContent = coins;
 }
 
-// === REINICIAR ===
-restartBtn.addEventListener("click", () => window.location.reload());
+// --- REINICIAR ---
+if (restartBtn) {
+  restartBtn.addEventListener("click", () => window.location.reload());
+}
