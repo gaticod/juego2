@@ -7,34 +7,128 @@
   <link rel="stylesheet" href="/css/juego2.css" />
 </head>
 <body>
+<div class="bg-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+
   <main class="page">
     <header>
-      <h1>Atención Selectiva</h1>
-      <p class="hint">Encuentra las 3 <strong>X</strong> correctas por ronda. Tienes 3 selecciones por ronda. Presiona <kbd>ESC</kbd> para terminar.</p>
+      <h1>🎯 Atención Selectiva</h1>
+      <p class="hint">Encuentra las 3 <strong>X</strong> correctas. Tienes 3 selecciones por ronda. Presiona <kbd>ESC</kbd> para terminar.</p>
     </header>
 
+    <div class="nav-bar">
+      <div class="nav-left">
+        <button class="nav-btn" id="backBtn" title="Volver" onclick="goBack()">⬅️</button>
+        <button class="nav-btn" id="pauseBtn" title="Pausar" onclick="togglePause()" disabled>⏸️</button>
+      </div>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">⏱️ Tiempo</div>
+          <div class="stat-value" id="timer">10:00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">🎮 Ronda</div>
+          <div class="stat-value" id="round">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">⭐ Puntos</div>
+          <div class="stat-value" id="score">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">🔄 Intentos</div>
+          <div class="stat-value" id="attempts">0</div>
+        </div>
+      </div>
+      <div class="nav-right">
+        <button class="nav-btn" id="soundBtn" title="Sonido" onclick="toggleSound()">🔊</button>
+        <button class="nav-btn" id="helpBtn" title="Ayuda" onclick="showHelp()">❓</button>
+      </div>
+    </div>
+
     <section class="controls">
-      <button id="startBtn" class="btn primary">Iniciar juego (10 min)</button>
-      <button id="stopBtn" class="btn ghost" title="Detener juego (ESC)">Detener</button>
+      <button id="startBtn" class="btn primary">🚀 Iniciar Juego</button>
+      <button id="stopBtn" class="btn ghost" disabled>🛑 Detener</button>
     </section>
 
-    <section id="boardWrap" class="board-wrap">
+    <section class="board-wrap">
       <div id="board" class="board" aria-live="polite"></div>
     </section>
+
+    <div id="message"></div>
   </main>
 
-  <!-- Modal final (solo aparece al terminar) -->
-  <div id="resultModal" class="modal" aria-hidden="true">
-    <div class="modal-card">
-      <h2>Resultados finales</h2>
-      <div id="modalBody" class="modal-body"></div>
-      <div class="modal-actions">
-        <button id="restartBtn" class="btn primary">Reiniciar</button>
-        <button id="closeBtn" class="btn">Cerrar</button>
+  <!-- Modal de Pausa -->
+  <div id="pauseModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">⏸️ Juego Pausado</div>
+      <div class="modal-text">
+        El juego está en pausa. Presiona "Continuar" para seguir jugando.
+      </div>
+      <div class="modal-stats">
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">Tiempo restante:</span>
+          <span class="modal-stat-value" id="pauseTime">0:00</span>
+        </div>
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">Puntos actuales:</span>
+          <span class="modal-stat-value" id="pauseScore">0</span>
+        </div>
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">Ronda actual:</span>
+          <span class="modal-stat-value" id="pauseRound">0</span>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn primary" onclick="togglePause()">▶️ Continuar</button>
+        <button class="btn ghost" onclick="quitFromPause()">🚪 Salir</button>
       </div>
     </div>
   </div>
 
+  <!-- Modal Final -->
+  <div id="finalModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">🎉 ¡Juego Terminado!</div>
+      <div class="modal-text">
+        ¡Excelente trabajo! Aquí están tus resultados finales:
+      </div>
+      <div class="modal-stats">
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">⭐ Puntuación Final:</span>
+          <span class="modal-stat-value" id="finalScore">0</span>
+        </div>
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">🎮 Rondas Completadas:</span>
+          <span class="modal-stat-value" id="finalRounds">0</span>
+        </div>
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">✅ Selecciones Correctas:</span>
+          <span class="modal-stat-value" id="finalCorrect">0</span>
+        </div>
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">❌ Selecciones Erróneas:</span>
+          <span class="modal-stat-value" id="finalWrong">0</span>
+        </div>
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">🔄 Total de Intentos:</span>
+          <span class="modal-stat-value" id="finalAttempts">0</span>
+        </div>
+        <div class="modal-stat-item">
+          <span class="modal-stat-label">💯 Precisión:</span>
+          <span class="modal-stat-value" id="finalAccuracy">0%</span>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn primary" onclick="restartGame()">🔄 Jugar de Nuevo</button>
+        <button class="btn ghost" onclick="closeFinalModal()">🚪 Salir</button>
+      </div>
+    </div>
+  </div>
   <script src="/script/juego2.js"></script>
 </body>
 </html>

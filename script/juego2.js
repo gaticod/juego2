@@ -1,239 +1,309 @@
-// Juego 2 - Atención Selectiva (final pedido)
-// Duración total 10 minutos; fases:
-// 0-3min => 5x4
-// 3-6min => 6x5
-// 6-9min => 7x6
-// 9-10min => 7x6 (mantenido)
-// Rondas cada 5s; 3 X reales (dispersas) por ronda
-// Solo 3 selecciones por ronda. Solo cuentan rondas como "acertadas" si el usuario seleccionó las 3 X (3/3).
-// Modal aparece solo al final (10 min) o si se presiona ESC (detención manual).
+const state = {
+      running: false,
+      paused: false,
+      soundEnabled: true,
+      round: 0,
+      score: 0,
+      timeLeft: 600,
+      totalAttempts: 0,
+      selections: 0,
+      maxSelections: 3,
+      targetLetter: 'X',
+      correctPositions: [],
+      timer: null,
+      correctSelections: 0,
+      wrongSelections: 0,
+      totalRoundsCompleted: 0
+    };
 
-const board = document.getElementById('board');
-const startBtn = document.getElementById('startBtn');
-const stopBtn = document.getElementById('stopBtn');
-const modal = document.getElementById('resultModal');
-const modalBody = document.getElementById('modalBody');
-const restartBtn = document.getElementById('restartBtn');
-const closeBtn = document.getElementById('closeBtn');
+    const els = {
+      board: document.getElementById('board'),
+      startBtn: document.getElementById('startBtn'),
+      stopBtn: document.getElementById('stopBtn'),
+      pauseBtn: document.getElementById('pauseBtn'),
+      timerEl: document.getElementById('timer'),
+      roundEl: document.getElementById('round'),
+      scoreEl: document.getElementById('score'),
+      attemptsEl: document.getElementById('attempts'),
+      message: document.getElementById('message'),
+      pauseModal: document.getElementById('pauseModal'),
+      finalModal: document.getElementById('finalModal')
+    };
 
-let totalCorrectRounds = 0;   // cuenta de rondas donde seleccionó 3/3
-let totalRounds = 0;
-let totalSeconds = 0;
-let gameInterval = null;      // 1s ticker
-let roundTimeout = null;      // 5s per round
-let roundRunning = false;
-let selectionsThisRound = 0;
-let selectedCorrectThisRound = 0;
-let currentXPositions = [];
-let gameActive = false;
-let roundDurationMs = 5000;   // 5 seconds
-const distractors = ['Y','V','/','\\','O','x'];
-const ROUND_STEP_MS = 5000;
-const TOTAL_GAME_MS = 10 * 60 * 1000; // 10 minutes
-const PHASE_MS = 3 * 60 * 1000; // 3 minutes per phase
-
-// helpers for grid sizes by elapsed ms
-function gridSizeForElapsed(msElapsed){
-  const minutes = msElapsed / 60000;
-  if (minutes < 3) return { cols: 5, rows: 4 };
-  if (minutes < 6) return { cols: 6, rows: 5 };
-  if (minutes < 9) return { cols: 7, rows: 6 };
-  return { cols: 7, rows: 6 }; // final minute keep largest
-}
-
-// create a round
-function startRound(){
-  // prevent overlapping
-  clearTimeout(roundTimeout);
-  selectionsThisRound = 0;
-  selectedCorrectThisRound = 0;
-  currentXPositions = [];
-
-  // determine current grid size based on totalSeconds
-  const msElapsed = totalSeconds * 1000;
-  const { cols, rows } = gridSizeForElapsed(msElapsed);
-  renderGrid(cols, rows);
-
-  roundRunning = true;
-  // setup automatic end of round after 5s
-  roundTimeout = setTimeout(() => {
-    endRound();
-  }, roundDurationMs);
-}
-
-function renderGrid(cols, rows){
-  board.innerHTML = '';
-  board.style.gridTemplateColumns = `repeat(${cols}, var(--cell-size))`;
-  board.style.gridTemplateRows = `repeat(${rows}, var(--cell-size))`;
-
-  const total = cols * rows;
-  // pick 3 distinct positions for X (dispersed)
-  const positions = new Set();
-  while (positions.size < 3){
-    positions.add(Math.floor(Math.random() * total));
-  }
-  currentXPositions = Array.from(positions);
-
-  // build cells
-  for (let i=0;i<total;i++){
-    const cell = document.createElement('div');
-    cell.className = 'cell';
-    cell.dataset.index = i;
-
-    if (currentXPositions.includes(i)){
-      cell.textContent = 'X';
-      cell.dataset.correct = 'true';
-    } else {
-      cell.textContent = distractors[Math.floor(Math.random() * distractors.length)];
-      cell.dataset.correct = 'false';
+    function getGridSize() {
+      if (state.timeLeft > 420) { // 0-3 minutos (600-420 seg)
+        return { rows: 4, cols: 5, class: 'grid-4x5' };
+      } else if (state.timeLeft > 240) { // 3-6 minutos (420-240 seg)
+        return { rows: 6, cols: 5, class: 'grid-6x5' };
+      } else { // 6-10 minutos (240-0 seg)
+        return { rows: 7, cols: 6, class: 'grid-7x6' };
+      }
     }
 
-    // fade-in effect small stagger
-    cell.style.opacity = '0';
-    board.appendChild(cell);
-    setTimeout(()=>{ cell.style.transition = 'opacity .35s ease, transform .18s ease'; cell.style.opacity = '1'; }, Math.random()*250);
-
-    // click handler
-    cell.addEventListener('click', () => onCellClick(cell));
-  }
-}
-
-function onCellClick(cell){
-  if (!roundRunning || !gameActive) return;
-  if (selectionsThisRound >= 3) return;
-  if (cell.classList.contains('selected')) return;
-
-  selectionsThisRound++;
-  cell.classList.add('selected');
-
-  if (cell.dataset.correct === 'true'){
-    cell.classList.add('correct');
-    selectedCorrectThisRound++;
-  } else {
-    cell.classList.add('wrong');
-  }
-
-  // If user has used 3 clicks, evaluate short after brief feedback
-  if (selectionsThisRound >= 3){
-    clearTimeout(roundTimeout);
-    setTimeout(()=> endRound(), 650);
-  }
-}
-
-function endRound(){
-  roundRunning = false;
-  totalRounds++;
-
-  // Only count this round as successful if selectedCorrectThisRound === 3
-  if (selectedCorrectThisRound === 3){
-    totalCorrectRounds++;
-  }
-
-  // proceed to next round unless total time exceeded
-  if (!gameActive) return;
-
-  // check if total game time reached
-  if (totalSeconds * 1000 >= TOTAL_GAME_MS){
-    finishGame();
-    return;
-  }
-
-  // start next round immediately
-  startRound();
-}
-
-// main game timer: ticks every second to track totalSeconds
-function startGame(){
-  if (gameActive) return;
-  gameActive = true;
-  totalCorrectRounds = 0;
-  totalRounds = 0;
-  totalSeconds = 0;
-
-  startBtn.disabled = true;
-  stopBtn.style.display = 'inline-block';
-
-  // start first round immediately
-  startRound();
-
-  // tick every second
-  gameInterval = setInterval(()=>{
-    totalSeconds++;
-    // if game total time reached -> finish
-    if (totalSeconds * 1000 >= TOTAL_GAME_MS){
-      clearInterval(gameInterval);
-      // ensure round timeout cleared and end current round
-      clearTimeout(roundTimeout);
-      roundRunning = false;
-      finishGame();
+    function startGame() {
+      state.running = true;
+      state.paused = false;
+      state.round = 0;
+      state.score = 0;
+      state.timeLeft = 600;
+      state.correctSelections = 0;
+      state.wrongSelections = 0;
+      state.totalRoundsCompleted = 0;
+      
+      els.startBtn.disabled = true;
+      els.stopBtn.disabled = false;
+      els.pauseBtn.disabled = false;
+      
+      updateDisplay();
+      startRound();
+      startTimer();
+      
+      showMessage('¡Juego iniciado! 🎮 ¡Encuentra las X!', 'info');
     }
-  }, 1000);
 
-  // ESC handling to stop early
-  window.addEventListener('keydown', escHandler);
-}
-
-// stop/finish handlers
-function escHandler(e){
-  if (e.code === 'Escape'){
-    // stop early and show final results
-    if (gameActive){
-      clearInterval(gameInterval);
-      clearTimeout(roundTimeout);
-      roundRunning = false;
-      finishGame(true);
+    function stopGame() {
+      state.running = false;
+      state.paused = false;
+      clearInterval(state.timer);
+      
+      showFinalModal();
+      
+      els.startBtn.disabled = false;
+      els.stopBtn.disabled = true;
+      els.pauseBtn.disabled = true;
+      els.board.innerHTML = '';
     }
-  }
-}
 
-function finishGame(manual=false){
-  gameActive = false;
-  roundRunning = false;
-  clearInterval(gameInterval);
-  clearTimeout(roundTimeout);
-  startBtn.disabled = false;
-  stopBtn.style.display = 'none';
-  window.removeEventListener('keydown', escHandler);
+    function togglePause() {
+      if (!state.running) return;
+      
+      state.paused = !state.paused;
+      els.pauseBtn.textContent = state.paused ? '▶️' : '⏸️';
+      
+      if (state.paused) {
+        clearInterval(state.timer);
+        showPauseModal();
+      } else {
+        startTimer();
+        els.pauseModal.classList.remove('active');
+      }
+    }
 
-  // compute level from totalCorrectRounds (these thresholds can be adjusted)
-  let level = 'Bajo';
-  if (totalCorrectRounds >= 40) level = 'Alto';
-  else if (totalCorrectRounds >= 20) level = 'Medio';
+    function showPauseModal() {
+      const mins = Math.floor(state.timeLeft / 60);
+      const secs = state.timeLeft % 60;
+      document.getElementById('pauseTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById('pauseScore').textContent = state.score;
+      document.getElementById('pauseRound').textContent = state.round;
+      els.pauseModal.classList.add('active');
+    }
 
-  // show modal with results (single modal at the end)
-  const minutesRan = Math.floor(totalSeconds / 60);
-  modalBody.innerHTML = `
-    <p><strong>Tiempo jugado:</strong> ${minutesRan} min ${totalSeconds % 60} s ${manual ? '(detenido manualmente)' : ''}</p>
-    <p><strong>Rondas totales jugadas:</strong> ${totalRounds}</p>
-    <p><strong>Rondas con 3/3 aciertos:</strong> ${totalCorrectRounds}</p>
-    <p><strong>Nivel de atención:</strong> ${level}</p>
-    <hr>
-    <p style="margin:0;color:#555;font-size:13px;">Nota: se cuentan únicamente las rondas en las que el usuario seleccionó las 3 X correctamente (3 de 3).</p>
-  `;
-  modal.setAttribute('aria-hidden','false');
-}
+    function quitFromPause() {
+      els.pauseModal.classList.remove('active');
+      stopGame();
+    }
 
-// UI button wiring
-startBtn.addEventListener('click', startGame);
-stopBtn.addEventListener('click', ()=>{
-  if (gameActive){
-    clearInterval(gameInterval);
-    clearTimeout(roundTimeout);
-    roundRunning = false;
-    finishGame(true);
-  }
-});
-closeBtn.addEventListener('click', ()=>{
-  modal.setAttribute('aria-hidden','true');
-});
-restartBtn.addEventListener('click', ()=>{
-  modal.setAttribute('aria-hidden','true');
-  // reset and restart
-  totalCorrectRounds = 0;
-  totalRounds = 0;
-  totalSeconds = 0;
-  startGame();
-});
+    function showFinalModal() {
+      const totalSelections = state.correctSelections + state.wrongSelections;
+      const accuracy = totalSelections > 0 ? Math.round((state.correctSelections / totalSelections) * 100) : 0;
+      
+      document.getElementById('finalScore').textContent = state.score;
+      document.getElementById('finalRounds').textContent = state.totalRoundsCompleted;
+      document.getElementById('finalCorrect').textContent = state.correctSelections;
+      document.getElementById('finalWrong').textContent = state.wrongSelections;
+      document.getElementById('finalAttempts').textContent = state.totalAttempts;
+      document.getElementById('finalAccuracy').textContent = accuracy + '%';
+      
+      els.finalModal.classList.add('active');
+    }
 
-// ensure stop button initially hidden
-stopBtn.style.display = 'none';
+    function closeFinalModal() {
+      els.finalModal.classList.remove('active');
+    }
+
+    function restartGame() {
+      els.finalModal.classList.remove('active');
+      state.totalAttempts++;
+      updateDisplay();
+      startGame();
+    }
+
+    function startRound() {
+      state.round++;
+      state.selections = 0;
+      state.correctPositions = [];
+      
+      const grid = getGridSize();
+      const gridSize = grid.rows * grid.cols;
+      const numTargets = 3;
+      
+      // Generar exactamente 3 posiciones para X
+      while (state.correctPositions.length < numTargets) {
+        const pos = Math.floor(Math.random() * gridSize);
+        if (!state.correctPositions.includes(pos)) {
+          state.correctPositions.push(pos);
+        }
+      }
+      
+      // Crear tablero
+      els.board.innerHTML = '';
+      els.board.className = `board ${grid.class}`;
+      
+      const distractors = ['Y', 'V', '/'];
+      
+      for (let i = 0; i < gridSize; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.index = i;
+        
+        if (state.correctPositions.includes(i)) {
+          cell.textContent = state.targetLetter;
+        } else {
+          cell.textContent = distractors[Math.floor(Math.random() * distractors.length)];
+        }
+        
+        cell.addEventListener('click', () => handleCellClick(i, cell));
+        els.board.appendChild(cell);
+      }
+      
+      updateDisplay();
+    }
+
+    function handleCellClick(index, cell) {
+      if (!state.running || state.paused || cell.classList.contains('correct') || cell.classList.contains('wrong')) return;
+      if (state.selections >= state.maxSelections) return;
+      
+      state.selections++;
+      cell.classList.add('selected');
+      
+      if (state.correctPositions.includes(index)) {
+        setTimeout(() => {
+          cell.classList.remove('selected');
+          cell.classList.add('correct');
+          state.score += 10;
+          state.correctSelections++;
+          playSound('correct');
+          updateDisplay();
+          
+          // Verificar si completó la ronda
+          const correctCells = document.querySelectorAll('.cell.correct').length;
+          if (correctCells === state.correctPositions.length) {
+            state.totalRoundsCompleted++;
+            setTimeout(() => {
+              showMessage('¡Ronda completada! 🎉 ¡Excelente trabajo!', 'success');
+              setTimeout(startRound, 1800);
+            }, 500);
+          }
+        }, 300);
+      } else {
+        setTimeout(() => {
+          cell.classList.remove('selected');
+          cell.classList.add('wrong');
+          state.wrongSelections++;
+          playSound('wrong');
+          
+          if (state.selections >= state.maxSelections) {
+            showMessage('Se acabaron los intentos. Nueva ronda... 😅', 'error');
+            setTimeout(startRound, 2200);
+          }
+        }, 300);
+      }
+    }
+
+    function startTimer() {
+      clearInterval(state.timer);
+      state.timer = setInterval(() => {
+        if (!state.paused && state.running) {
+          state.timeLeft--;
+          updateDisplay();
+          
+          // Verificar cambio de nivel
+          if (state.timeLeft === 420 || state.timeLeft === 240) {
+            showMessage('🆙 ¡Nivel aumentado! El tablero es más grande ahora.', 'info');
+            setTimeout(startRound, 1500);
+          }
+          
+          if (state.timeLeft <= 0) {
+            stopGame();
+          }
+        }
+      }, 1000);
+    }
+
+    function updateDisplay() {
+      const mins = Math.floor(state.timeLeft / 60);
+      const secs = state.timeLeft % 60;
+      els.timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      els.roundEl.textContent = state.round;
+      els.scoreEl.textContent = state.score;
+      els.attemptsEl.textContent = state.totalAttempts;
+    }
+
+    function showMessage(text, type) {
+      els.message.textContent = text;
+      els.message.className = `message ${type}`;
+      setTimeout(() => {
+        els.message.textContent = '';
+        els.message.className = 'message';
+      }, 3000);
+    }
+
+    function playSound(type) {
+      if (!state.soundEnabled) return;
+      // Aquí se podrían agregar sonidos reales
+      console.log(`Sound: ${type}`);
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById('soundBtn').textContent = state.soundEnabled ? '🔊' : '🔇';
+      showMessage(state.soundEnabled ? '🔊 Sonido activado' : '🔇 Sonido desactivado', 'info');
+    }
+
+    function goBack() {
+      if (state.running) {
+        if (confirm('¿Deseas salir del juego? Se perderá tu progreso.')) {
+          stopGame();
+        }
+      } else {
+        if (confirm('¿Deseas salir?')) {
+          closeFinalModal();
+        }
+      }
+    }
+
+    function showHelp() {
+      alert('🎯 CÓMO JUGAR:\n\n1. Presiona "Iniciar Juego"\n2. Encuentra las 3 letras X en el tablero\n3. Tienes 3 intentos por ronda\n4. Ganas 10 puntos por cada X correcta\n5. El tablero crece cada 3 minutos\n\n📊 NIVELES:\n• 0-3 min: Tablero 4×5 (20 celdas)\n• 3-6 min: Tablero 6×5 (30 celdas)\n• 6-10 min: Tablero 7×6 (42 celdas)\n\n💡 CONSEJOS:\n• Las letras Y, V y / se parecen a X\n• Concéntrate y toma tu tiempo\n• Usa el botón de pausa si necesitas descansar\n\n¡Buena suerte! 🍀');
+    }
+
+    // Event listeners
+    els.startBtn.addEventListener('click', () => {
+      state.totalAttempts++;
+      updateDisplay();
+      startGame();
+    });
+    
+    els.stopBtn.addEventListener('click', stopGame);
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && state.running) {
+        if (state.paused) {
+          quitFromPause();
+        } else {
+          stopGame();
+        }
+      }
+    });
+
+    // Cerrar modales al hacer clic fuera
+    els.pauseModal.addEventListener('click', (e) => {
+      if (e.target === els.pauseModal) {
+        togglePause();
+      }
+    });
+
+    els.finalModal.addEventListener('click', (e) => {
+      if (e.target === els.finalModal) {
+        closeFinalModal();
+      }
+    });
