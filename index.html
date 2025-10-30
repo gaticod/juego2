@@ -7,34 +7,110 @@
   <link rel="stylesheet" href="css/estilo.css" />
   <!-- Font Awesome para iconos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 <body>
+
+  <div class="dog">
+    <lottie-player 
+      src="../animations/dog.json"
+      background="transparent"
+      speed="0.5"
+      loop
+      autoplay>
+    </lottie-player>
+
+  </div>
+
+  <div class="x" id="closeBtn">
+    <lottie-player 
+      src="../animations/x.json"
+      background="transparent"
+      speed="0.5"
+      loop
+      autoplay>
+    </lottie-player>
+
+    <!-- Área invisible para detectar el clic -->
+    <div class="x-overlay"></div>
+  </div>
+
+
+
+  <div class="bg-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+
   <div class="contenedor-principal">
-    <!-- Added animated character next to title -->
     <div class="titulo-container">
-      <h1>🧠 Escala de Evaluación de Atención en Niño (EEvAN)</h1>
+      <h1>🧠 Escala de Evaluación de Atención en Niños (EEvAN)</h1>
     </div>
 
     <div class="contenedor-juegos">
-     <!-- Juego 1 -->
+      <!-- Juego 1 -->
       <a class="card" href="game/juego1.html">
-        <div class="icon-badge" style="--icon: '👁️'"></div>
         <img src="images/juego1.jpg" alt="Atención Sostenida" />
+        <!-- <div class="card-title">Atención Sostenida</div> -->
       </a>
 
       <!-- Juego 2 -->
       <a class="card" href="game/juego2.html">
-        <div class="icon-badge" style="--icon: '🎯'"></div>
         <img src="images/juego2.jpg" alt="Atención Selectiva" />
+        <!-- <div class="card-title">Atención Selectiva</div> -->
       </a>
       
-      <!-- Juego 3 -->
-      <a class="card" href="game/juego3.html">
-        <div class="icon-badge" style="--icon: '⚡'"></div>
+      <!-- Juego 3 - Con Modal -->
+      <div class="card" onclick="openModal()">
         <img src="images/juego3.jpg" alt="Atención Dividida" />
-      </a>
+        <!-- <div class="card-title">Atención Dividida</div> -->
+      </div>
+    </div>
   </div>
 
-  <script src="js/script.js"></script>
+  <!-- Modal de Selección -->
+  <div id="modalOverlay" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <h2 class="modal-title">⚡ Atención Dividida</h2>
+      <p class="modal-subtitle">Elige el tipo de juego que deseas practicar</p>
+      
+      <div class="modal-cards">
+        <a href="game/juego3.html" class="modal-card">
+          <span class="modal-card-icon">🎮</span>
+          <div class="modal-card-title">Juego Visual</div>
+          <div class="modal-card-desc">Atiende múltiples estímulos visuales simultáneamente</div>
+        </a>
+
+        <a href="game/juego3b.html" class="modal-card">
+          <span class="modal-card-icon">🎵</span>
+          <div class="modal-card-title">Juego Auditivo</div>
+          <div class="modal-card-desc">Procesa diferentes sonidos al mismo tiempo</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script/script.js"></script>
+
+  <script>
+    const closeBtn = document.getElementById('closeBtn');
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      // Intentar cerrar la ventana actual
+      window.close();
+
+      // Si el navegador bloquea window.close() (caso común),
+      // mostrar un mensaje o redirigir a otra página
+      if (!window.closed) {
+        alert("No se puede cerrar esta pestaña automáticamente. Ciérrala manualmente.");
+      }
+    });
+  </script>
+
 </body>
 </html>
