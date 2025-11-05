@@ -400,6 +400,50 @@
       40%, 80% { transform: translateX(12px); }
     }
 
+    .board {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 30px auto;
+}
+
+.cell {
+  background: rgba(255,255,255,0.7);
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.cell.correct {
+  background: #c8f7c5;
+}
+
+.cell.wrong {
+  background: #f7c5c5;
+}
+
+.grid-4x5 { grid-template-columns: repeat(5, 100px); }
+.grid-6x5 { grid-template-columns: repeat(5, 90px); }
+.grid-7x6 { grid-template-columns: repeat(6, 80px); }
+
+/* === Bloque agregado para las manzanas === */
+.apple {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.apple:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+
     /* Modal */
     .modal {
       display: none;

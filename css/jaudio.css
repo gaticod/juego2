@@ -1,0 +1,173 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top left, #7b2ff7, #f107a3);
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Contenedor principal */
+.audio-game-container {
+  width: 420px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 35px 25px;
+  text-align: center;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 1s ease-out;
+}
+
+/* Título animado */
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #ffe259, #ffa751);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 25px;
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+/* Barra de progreso */
+.progress-container {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 25px 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ffcc00, #ff8800);
+  box-shadow: 0 0 10px #ffcc00;
+  transition: width 0.25s linear;
+}
+
+/* Botones */
+.controls button {
+  background: linear-gradient(135deg, #00f5d4, #00bbf9);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.3);
+}
+
+.controls button:hover:not(:disabled) {
+  transform: scale(1.08);
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.6);
+}
+
+.controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Efecto de pulso suave */
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Animación del gatito */
+.cat {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: bounceIn 1.2s ease;
+}
+
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  color: #333;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  width: 300px;
+  animation: fadeInUp 0.5s ease;
+}
+
+.modal-content h3 {
+  margin-bottom: 15px;
+  color: #6c2ff7;
+}
+
+.modal-content button {
+  background: linear-gradient(135deg, #00f5d4, #00bbf9);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.modal-content button:hover {
+  transform: scale(1.05);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 10px rgba(0,255,200,0.4); }
+  50% { box-shadow: 0 0 25px rgba(0,255,200,0.7); }
+  100% { box-shadow: 0 0 10px rgba(0,255,200,0.4); }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes textGlow {
+  from { text-shadow: 0 0 5px #ffef9f, 0 0 10px #ffcc00; }
+  to { text-shadow: 0 0 15px #ffef9f, 0 0 30px #ffcc00; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

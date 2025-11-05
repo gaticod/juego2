@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎧 Juego de Atención Auditiva</title>
+  <link rel="stylesheet" href="/css/jaudio.css" />
+</head>
+<body>
+  <div class="audio-game-container fade-in">
+    <h2 class="title">🎧 Juego de Atención Auditiva</h2>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <audio id="audio" src="/images/audio.3.mp3"></audio>
+
+    <div class="controls">
+      <button id="start-btn" class="pulse">▶️ Iniciar</button>
+      <button id="stop-btn" class="pulse" disabled>⏹️ Detener</button>
+    </div>
+
+    <section class="cat bounce-in">
+      <lottie-player
+        src="../animations/Cat.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay>
+      </lottie-player>
+    </section>
+  </div>
+
+  <!-- 🟢 Modal de resultados -->
+  <div id="result-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>📊 Resultados del Juego</h3>
+      <p><strong>Intentos detectados:</strong> <span id="tries"></span></p>
+      <p><strong>Intentos esperados:</strong> 30</p>
+      <p><strong>Resultado:</strong> <span id="evaluation"></span></p>
+      <button id="close-modal">Aceptar</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="/script/jaudio.js"></script>
+</body>
+</html>

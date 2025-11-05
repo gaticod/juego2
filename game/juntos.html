@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juego 3 de 3 - Avión con Audio</title>
+  <link rel="stylesheet" href="/css/juntos.css" />
+</head>
+<body>
+  <div id="game-container">
+    <div id="sky"></div>
+
+    <!-- Avión -->
+    <img id="plane" src="/images/avion.png" alt="Avión">
+
+    <!-- HUD -->
+    <div id="hud">
+      <p>⏱️ Tiempo: <span id="time">300</span> s</p>
+      <p>💰 Monedas: <span id="coins">0</span> / 60</p>
+      <p>⎵ Space: <span id="spaceCount">0</span></p>
+    </div>
+
+    <!-- Pantalla final (modal) -->
+    <div id="end-screen" class="hidden">
+      <div class="end-panel">
+        <h2>✈️ Juego terminado</h2>
+        <p>Monedas recolectadas: <span id="final-coins">0</span></p>
+        <p>Veces que presionaste Space: <span id="final-space">0</span></p>
+        <div class="end-buttons">
+          <button id="restart">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio -->
+  <!-- Asegúrate de colocar tu audio en /images/audio3/audio.mp3 -->
+  <audio id="bgAudio" src="/images/audio.3.mp3" preload="auto"></audio>
+
+  <script src="/script/juntos.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ======== CONTENEDOR PRINCIPAL ======== */
+#game-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ======== CIELO CON DEGRADADO ======== */
+#sky {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #a6d8ff 0%, #f7f9ff 100%);
+  overflow: hidden;
+}
+
+/* ======== NUBES ======== */
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50px;
+  box-shadow:
+    30px 10px 0 0 rgba(255,255,255,0.9),
+    60px 10px 0 0 rgba(255,255,255,0.9);
+  opacity: 0.85;
+  animation: moveClouds linear infinite;
+}
+
+@keyframes moveClouds {
+  from { transform: translateX(110vw); }
+  to { transform: translateX(-120vw); }
+}
+
+.cloud.small { width: 70px; height: 40px; animation-duration: 70s; }
+.cloud.medium { width: 120px; height: 70px; animation-duration: 100s; }
+.cloud.large { width: 180px; height: 100px; animation-duration: 130s; }
+
+/* ======== AVIÓN (AUMENTÉ TAMAÑO) ======== */
+#plane {
+  position: absolute;
+  width: 360px; /* más grande */
+  left: 120px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.1s ease;
+  animation: float 2s ease-in-out infinite;
+  z-index: 30;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(-50%) rotate(-2deg); }
+  50% { transform: translateY(-48%) rotate(2deg); }
+}
+
+/* ======== MONEDAS ======== */
+.coin {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  background: radial-gradient(circle, #ffda44 40%, #f8b400 90%);
+  border-radius: 50%;
+  border: 2px solid #ffd700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* ======== AVES ======== */
+.bird {
+  position: absolute;
+  width: 60px;
+  animation: flyAcross linear forwards;
+  z-index: 25;
+}
+
+@keyframes flyAcross {
+  from { transform: translateX(110vw); }
+  to { transform: translateX(-120vw); }
+}
+
+/* ======== HUD ======== */
+#hud {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  color: #333;
+  background: rgba(255,255,255,0.9);
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.12);
+  z-index: 60;
+}
+
+#hud p { margin-bottom: 6px; }
+
+/* ======== PANTALLA FINAL (MODAL) ======== */
+#end-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#end-screen.hidden { display: none; }
+
+.end-panel {
+  max-width: 520px;
+  width: 90%;
+  padding: 28px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  background: #fff;
+}
+
+.end-panel h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.end-panel p {
+  font-size: 1.05rem;
+  color: #444;
+  margin: 8px 0;
+}
+
+.end-buttons {
+  margin-top: 18px;
+}
+
+.end-buttons button {
+  padding: 12px 22px;
+  background: linear-gradient(135deg,#00b4d8,#0078c7);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .15s;
+}
+
+.end-buttons button:hover { transform: translateY(-3px); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  #plane { width: 260px; left: 60px; }
+  .end-panel { padding: 20px; }
+  #hud { font-size: 14px; padding: 8px 12px; }
+}
