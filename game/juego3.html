@@ -5,13 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Juego del Avioncito</title>
   <link rel="stylesheet" href="/css/juego3.css">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 </head>
 <body>
-  <div id="game-container">
-    <div id="sky"></div>
+<div id="game-container">
+    <div id="sky">
+      <!-- Estrellas decorativas -->
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
 
-    <!-- Avión -->
-    <img id="plane" src="/images/avion.png" alt="Avión">
+    <!-- Avión con imagen personalizada -->
+    <img id="plane" src="../images/avion.png" alt="Avión">
 
     <!-- HUD -->
     <div id="hud">
@@ -19,11 +27,41 @@
       <p>💰 Monedas: <span id="coins">0</span></p>
     </div>
 
+    <!-- Consejero animado -->
+    <div id="advisor-container">
+      <div id="advice-bubble">
+        <p id="advice-text">¡Usa las flechas o WASD para moverte! 🎮</p>
+      </div>
+      <lottie-player
+        id="advisor-lottie"
+        src="../animations/map.json"
+        background="transparent"
+        speed="1"
+        style="width: 150px; height: 150px;"
+        loop
+        autoplay>
+      </lottie-player>
+    </div>
+
+    <!-- Pantalla de inicio -->
+    <div id="start-screen">
+      <h1>✈️ Atencion Visual ✈️</h1>
+      <button id="start-button">🚀 Empezar Juego</button>
+    </div>
+
+    <!-- Menú de pausa -->
+    <div id="pause-menu">
+      <h2>⏸️ PAUSA</h2>
+      <button id="continue-button" class="menu-button">▶️ Continuar</button>
+      <button id="restart-level-button" class="menu-button">🔄 Reiniciar Nivel</button>
+      <button id="back-button" class="menu-button">🏠 Volver al Inicio</button>
+    </div>
+
     <!-- Pantalla final -->
     <div id="end-screen" class="hidden">
-      <h2>✈️ Juego terminado</h2>
+      <h2>✈️ ¡Juego Terminado!</h2>
       <p>Has recolectado <span id="final-coins">0</span> monedas</p>
-      <button id="restart">Reiniciar</button>
+      <button id="restart">🔄 Jugar de Nuevo</button>
     </div>
   </div>
 

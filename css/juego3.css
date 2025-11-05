@@ -1,150 +1,585 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body, html {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: "Poppins", sans-serif;
-}
+    body {
+      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive;
+      overflow: hidden;
+      position: relative;
+    }
 
-/* ======== CONTENEDOR PRINCIPAL ======== */
-#game-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
+    #game-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* ======== CIELO CON DEGRADADO ======== */
-#sky {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, #a6d8ff, #f7f9ff);
-  overflow: hidden;
-}
+    #sky {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, 
+        #87CEEB 0%, 
+        #98D8E8 30%, 
+        #B0E2FF 60%, 
+        #E0F6FF 100%);
+      position: absolute;
+      animation: skyPulse 8s ease-in-out infinite;
+    }
 
-/* ======== NUBES ======== */
-.cloud {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50px;
-  box-shadow:
-    30px 10px 0 0 rgba(255,255,255,0.9),
-    60px 10px 0 0 rgba(255,255,255,0.9);
-  opacity: 0.85;
-  animation: moveClouds linear infinite;
-}
+    @keyframes skyPulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.1); }
+    }
 
-@keyframes moveClouds {
-  from { transform: translateX(110vw); }
-  to { transform: translateX(-120vw); }
-}
+    /* Nubes decorativas */
+    #sky::before,
+    #sky::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 100px;
+      animation: floatClouds 20s linear infinite;
+    }
 
-.cloud.small { width: 70px; height: 40px; animation-duration: 70s; }
-.cloud.medium { width: 120px; height: 70px; animation-duration: 100s; }
-.cloud.large { width: 180px; height: 100px; animation-duration: 130s; }
+    #sky::before {
+      width: 200px;
+      height: 80px;
+      top: 15%;
+      left: -200px;
+      box-shadow: 
+        220px 0 0 -10px rgba(255, 255, 255, 0.7),
+        450px 50px 0 0 rgba(255, 255, 255, 0.6),
+        700px 20px 0 -20px rgba(255, 255, 255, 0.8);
+    }
 
-/* ======== AVIÓN ======== */
-#plane {
-  position: absolute;
-  width: 300px;
-  left: 100px;
-  top: 50%;
-  transform: translateY(-50%);
-  transition: transform 0.1s ease;
-  animation: float 2s ease-in-out infinite;
-}
+    #sky::after {
+      width: 180px;
+      height: 70px;
+      top: 60%;
+      left: -180px;
+      animation-duration: 25s;
+      box-shadow: 
+        350px 0 0 -15px rgba(255, 255, 255, 0.6),
+        600px -30px 0 0 rgba(255, 255, 255, 0.7),
+        900px 10px 0 -10px rgba(255, 255, 255, 0.75);
+    }
 
-@keyframes float {
-  0%, 100% { transform: translateY(-50%) rotate(-2deg); }
-  50% { transform: translateY(-48%) rotate(2deg); }
-}
+    @keyframes floatClouds {
+      to { transform: translateX(calc(100vw + 300px)); }
+    }
 
-/* ======== MONEDAS ======== */
-.coin {
-  position: absolute;
-  width: 35px;
-  height: 35px;
-  background: radial-gradient(circle, #ffda44 40%, #f8b400 90%);
-  border-radius: 50%;
-  border: 2px solid #ffd700;
-  animation: moveCoin 10s linear forwards, spin 1s linear infinite;
-}
+    /* Estrellas decorativas */
+    .star {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: rotateStar 3s linear infinite, floatUpDown 4s ease-in-out infinite;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+    }
 
-@keyframes moveCoin {
-  from { transform: translateX(110vw); }
-  to { transform: translateX(-120vw); }
-}
+    @keyframes rotateStar {
+      to { transform: rotate(360deg); }
+    }
 
-@keyframes spin {
-  0% { transform: rotateY(0deg); }
-  100% { transform: rotateY(360deg); }
-}
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.9; }
+      50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+    }
 
-/* ======== AVES ======== */
-.bird {
-  position: absolute;
-  width: 60px;
-  animation: flyAcross linear forwards;
-}
+    .star:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+    .star:nth-child(2) { top: 25%; right: 20%; animation-delay: 1s; }
+    .star:nth-child(3) { bottom: 30%; left: 10%; animation-delay: 2s; }
+    .star:nth-child(4) { bottom: 15%; right: 15%; animation-delay: 1.5s; }
 
-@keyframes flyAcross {
-  from { transform: translateX(110vw); }
-  to { transform: translateX(-120vw); }
-}
+    /* Avión con imagen personalizada */
+    #plane {
+      position: absolute;
+      width: 120px;
+      height: auto;
+      filter: drop-shadow(5px 5px 15px rgba(0, 0, 0, 0.4))
+              drop-shadow(0 0 25px rgba(255, 215, 0, 0.6));
+      animation: planeBounce 2s ease-in-out infinite;
+      z-index: 10;
+      transition: all 0.1s ease;
+    }
 
-/* ======== HUD ======== */
-#hud {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  color: #333;
-  background: rgba(255,255,255,0.7);
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 16px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-}
+    @keyframes planeBounce {
+      0%, 100% { transform: translate(0, -50%) rotate(0deg) scale(1); }
+      50% { transform: translate(0, calc(-50% - 15px)) rotate(-3deg) scale(1.05); }
+    }
 
-/* ======== PANTALLA FINAL ======== */
-#end-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255,255,255,0.9);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+    /* Monedas mejoradas */
+    .coin {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle at 30% 30%, #FFF4A3, #FFD700 40%, #FFA500 70%, #FF8C00);
+      border-radius: 50%;
+      border: 5px solid #FF8C00;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: coinFloat 1.5s ease-in-out infinite;
+      box-shadow: 
+        0 0 30px rgba(255, 215, 0, 0.8),
+        inset -3px -3px 10px rgba(0, 0, 0, 0.3),
+        inset 3px 3px 10px rgba(255, 255, 255, 0.7);
+      z-index: 5;
+      right: -70px;
+    }
 
-#end-screen.hidden { display: none; }
+    @keyframes coinFloat {
+      0%, 100% { 
+        transform: translateY(0) scale(1);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.8),
+                    inset -3px -3px 10px rgba(0, 0, 0, 0.3),
+                    inset 3px 3px 10px rgba(255, 255, 255, 0.7);
+      }
+      50% { 
+        transform: translateY(-15px) scale(1.1);
+        box-shadow: 0 0 50px rgba(255, 215, 0, 1),
+                    inset -3px -3px 10px rgba(0, 0, 0, 0.3),
+                    inset 3px 3px 10px rgba(255, 255, 255, 0.7);
+      }
+    }
 
-#end-screen h2 {
-  font-size: 2em;
-  color: #333;
-}
+    .coin::before {
+      content: '💰';
+      font-size: 35px;
+      animation: coinRotate 2s ease-in-out infinite;
+    }
 
-#end-screen button {
-  margin-top: 20px;
-  padding: 10px 25px;
-  background: #00b4d8;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-}
+    @keyframes coinRotate {
+      0%, 100% { transform: rotateY(0deg); }
+      50% { transform: rotateY(180deg); }
+    }
 
-#end-screen button:hover {
-  background: #0096c7;
-}
+    .coin::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 15%;
+      width: 40%;
+      height: 40%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+      border-radius: 50%;
+      filter: blur(3px);
+    }
+
+    /* HUD */
+    #hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(135deg, #FF6B9D 0%, #C06C84 100%);
+      padding: 20px 30px;
+      border-radius: 25px;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 
+        0 8px 32px rgba(192, 108, 132, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        0 0 0 5px rgba(255, 107, 157, 0.2);
+      z-index: 100;
+      animation: hudPulse 2s ease-in-out infinite;
+      border: 4px solid rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #hud.visible {
+      opacity: 1;
+    }
+
+    @keyframes hudPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    #hud p {
+      margin: 8px 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #hud span {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 5px 15px;
+      border-radius: 15px;
+      min-width: 60px;
+      text-align: center;
+      animation: numberGlow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes numberGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+      50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+    }
+
+    /* Consejero animado */
+    #advisor-container {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: flex-end;
+      gap: 15px;
+      z-index: 150;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #advisor-container.visible {
+      opacity: 1;
+      animation: advisorBounce 3s ease-in-out infinite;
+    }
+
+    @keyframes advisorBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    #advice-bubble {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 25px;
+      border-radius: 25px;
+      max-width: 350px;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      box-shadow: 
+        0 10px 30px rgba(102, 126, 234, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+      border: 4px solid rgba(255, 255, 255, 0.4);
+      position: relative;
+      animation: bubblePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes bubblePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    #advice-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: 20px;
+      right: -15px;
+      width: 0;
+      height: 0;
+      border-left: 20px solid #667eea;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+
+    #advisor-lottie {
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+    }
+
+    /* Pantalla de inicio */
+    #start-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 200;
+      backdrop-filter: blur(5px);
+    }
+
+    #start-screen.hidden {
+      display: none;
+    }
+
+    #start-screen h1 {
+      font-size: 72px;
+      color: white;
+      text-shadow: 
+        4px 4px 8px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 215, 0, 0.8);
+      margin-bottom: 50px;
+      animation: titleBounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes titleBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.05); }
+    }
+
+    #start-button {
+      padding: 25px 60px;
+      font-size: 32px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 
+        0 10px 30px rgba(76, 175, 80, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+      font-family: 'Comic Sans MS', cursive;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      border: 5px solid rgba(255, 255, 255, 0.4);
+      animation: buttonPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes buttonPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    #start-button:hover {
+      transform: translateY(-5px) scale(1.1) !important;
+      box-shadow: 
+        0 15px 40px rgba(76, 175, 80, 0.7),
+        inset 0 2px 0 rgba(255, 255, 255, 0.4);
+      background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+    }
+
+    #start-button:active {
+      transform: translateY(-2px) scale(1.05) !important;
+    }
+
+    /* Menú de pausa */
+    #pause-menu {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 50px 60px;
+      border-radius: 40px;
+      text-align: center;
+      color: white;
+      z-index: 300;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        0 0 0 8px rgba(102, 126, 234, 0.3);
+      border: 6px solid rgba(255, 255, 255, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    #pause-menu.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: all;
+    }
+
+    #pause-menu h2 {
+      font-size: 48px;
+      margin-bottom: 30px;
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .menu-button {
+      display: block;
+      width: 100%;
+      margin: 15px 0;
+      padding: 18px 45px;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Comic Sans MS', cursive;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: 4px solid rgba(255, 255, 255, 0.4);
+    }
+
+    #continue-button {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      box-shadow: 
+        0 8px 20px rgba(76, 175, 80, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    #continue-button:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.6);
+    }
+
+    #restart-level-button {
+      background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+      box-shadow: 
+        0 8px 20px rgba(255, 165, 0, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    #restart-level-button:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(255, 165, 0, 0.6);
+    }
+
+    #back-button {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+      box-shadow: 
+        0 8px 20px rgba(255, 107, 107, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    #back-button:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6);
+    }
+
+    /* Pantalla final */
+    #end-screen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 50px 60px;
+      border-radius: 40px;
+      text-align: center;
+      color: white;
+      z-index: 1000;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        0 0 0 8px rgba(102, 126, 234, 0.3);
+      border: 6px solid rgba(255, 255, 255, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    #end-screen.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: all;
+    }
+
+    #end-screen.hidden {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+      pointer-events: none;
+    }
+
+    #end-screen h2 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+      animation: titleBounce 1s ease-in-out infinite;
+    }
+
+    #end-screen p {
+      font-size: 28px;
+      margin: 20px 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    #final-coins {
+      display: inline-block;
+      font-size: 42px;
+      font-weight: bold;
+      color: #FFD700;
+      text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(255, 215, 0, 0.8);
+      animation: coinsShine 1.5s ease-in-out infinite;
+    }
+
+    @keyframes coinsShine {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.1); filter: brightness(1.3); }
+    }
+
+    #restart {
+      margin-top: 30px;
+      padding: 18px 45px;
+      font-size: 26px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 
+        0 8px 20px rgba(255, 107, 107, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+      font-family: 'Comic Sans MS', cursive;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: 4px solid rgba(255, 255, 255, 0.4);
+    }
+
+    #restart:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 
+        0 12px 30px rgba(255, 107, 107, 0.6),
+        inset 0 2px 0 rgba(255, 255, 255, 0.4);
+      background: linear-gradient(135deg, #FF8E53 0%, #FF6B6B 100%);
+    }
+
+    #restart:active {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    /* Partículas de confeti */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #FF6B9D;
+      top: -20px;
+      animation: confettiFall 4s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    .confetti:nth-child(2n) { background: #FFD700; animation-duration: 3.5s; }
+    .confetti:nth-child(3n) { background: #7B68EE; animation-duration: 4.5s; }
+    .confetti:nth-child(4n) { background: #00CED1; animation-duration: 3.8s; }
+
+    /* Efecto de colección de moneda */
+    @keyframes coinCollect {
+      0% { 
+        transform: scale(1) rotate(0deg); 
+        opacity: 1; 
+      }
+      50% { 
+        transform: scale(1.8) rotate(180deg); 
+        opacity: 0.8;
+        filter: brightness(2);
+      }
+      100% { 
+        transform: scale(0) rotate(360deg); 
+        opacity: 0; 
+      }
+    }
+
+    .coin.collected {
+      animation: coinCollect 0.5s ease-out forwards;
+      box-shadow: 0 0 60px rgba(255, 215, 0, 1);
+    }

@@ -1,146 +1,308 @@
-// =============================
-// 🎯 LÓGICA DEL JUEGO DEL AVIÓN
-// =============================
-const sky = document.getElementById("sky");
-const plane = document.getElementById("plane");
-const coinsDisplay = document.getElementById("coins");
-const timeDisplay = document.getElementById("time");
-const endScreen = document.getElementById("end-screen");
-const finalCoins = document.getElementById("final-coins");
-const restartBtn = document.getElementById("restart");
+ // Estado del juego
+    const gameState = {
+      playing: false,
+      paused: false,
+      timeLeft: 120,
+      coinsCollected: 0,
+      planeX: 100,
+      planeY: window.innerHeight / 2,
+      planeSpeed: 6,
+      coins: [],
+      keys: {},
+      adviceIndex: 0
+    };
 
-let planeY = window.innerHeight / 2;
-let planeX = 100;
-let velocityY = 0;
-let velocityX = 0;
-let coins = 0;
-let timeLeft = 120; // 🕒 2 minutos exactos
-let gameRunning = true;
+    // Consejos que irá mostrando
+    const adviceMessages = [
+      '¡Usa las flechas o WASD para moverte! 🎮',
+      '¡Recoge todas las monedas que puedas! 💰',
+      '¡Presiona ESC para pausar el juego! ⏸️',
+      '¡Mantente alerta, las monedas vienen rápido! ⚡',
+      '¡Tienes 2 minutos para recolectar monedas! ⏱️',
+      '¡Muévete con precisión para no perder monedas! 🎯',
+      '¡Cada moneda cuenta para tu puntuación! 🌟'
+    ];
 
-let coinCount = 0; // 🔢 contador de monedas creadas
+    // Elementos DOM
+    const plane = document.getElementById('plane');
+    const hud = document.getElementById('hud');
+    const timeDisplay = document.getElementById('time');
+    const coinsDisplay = document.getElementById('coins');
+    const startScreen = document.getElementById('start-screen');
+    const pauseMenu = document.getElementById('pause-menu');
+    const endScreen = document.getElementById('end-screen');
+    const finalCoinsDisplay = document.getElementById('final-coins');
+    const gameContainer = document.getElementById('game-container');
+    const advisorContainer = document.getElementById('advisor-container');
+    const adviceText = document.getElementById('advice-text');
 
-// --- NUBES ---
-function createCloud() {
-  if (!gameRunning) return;
-  const cloud = document.createElement("div");
-  const sizes = ["small", "medium", "large"];
-  const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
-  cloud.classList.add("cloud", randomSize);
-  cloud.style.top = Math.random() * 80 + "%";
-  sky.appendChild(cloud);
-  setTimeout(() => cloud.remove(), 130000);
-}
-setInterval(createCloud, 8000);
-for (let i = 0; i < 4; i++) createCloud();
+    // Botones
+    const startButton = document.getElementById('start-button');
+    const continueButton = document.getElementById('continue-button');
+    const restartLevelButton = document.getElementById('restart-level-button');
+    const backButton = document.getElementById('back-button');
+    const restartButton = document.getElementById('restart');
 
+    // Crear confeti decorativo
+    function createConfetti() {
+      for (let i = 0; i < 15; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.animationDelay = Math.random() * 4 + 's';
+        confetti.style.width = (Math.random() * 6 + 4) + 'px';
+        confetti.style.height = (Math.random() * 6 + 4) + 'px';
+        gameContainer.appendChild(confetti);
+      }
+    }
+    createConfetti();
 
-// --- MONEDAS ---
-function createCoin() {
-  if (!gameRunning || coinCount >= 30) return; // 💰 solo 30 monedas en total
-
-  const coin = document.createElement("div");
-  coin.classList.add("coin");
-
-  const topPos = Math.random() * 80;
-  coin.style.top = topPos + "vh";
-  let posX = window.innerWidth + 20;
-  coin.style.left = posX + "px";
-  sky.appendChild(coin);
-
-  coinCount++; // incrementamos contador de monedas creadas
-
-  const speed = 3 + Math.random() * 3;
-  const moveId = setInterval(() => {
-    if (!gameRunning) return;
-    posX -= speed;
-    coin.style.left = posX + "px";
-
-    const coinRect = coin.getBoundingClientRect();
-    const planeRect = plane.getBoundingClientRect();
-
-    if (
-      coinRect.left < planeRect.right &&
-      coinRect.right > planeRect.left &&
-      coinRect.top < planeRect.bottom &&
-      coinRect.bottom > planeRect.top
-    ) {
-      coins++;
-      coinsDisplay.textContent = coins;
-      coin.remove();
-      clearInterval(moveId);
-      return;
+    // Rotar consejos del advisor
+    function rotateAdvice() {
+      setInterval(() => {
+        if (!gameState.playing || gameState.paused) return;
+        
+        gameState.adviceIndex = (gameState.adviceIndex + 1) % adviceMessages.length;
+        adviceText.textContent = adviceMessages[gameState.adviceIndex];
+      }, 8000); // Cambiar consejo cada 8 segundos
     }
 
-    if (posX < -100) {
-      coin.remove();
-      clearInterval(moveId);
+    // Crear monedas que vienen desde la derecha
+    function createCoin() {
+      const coin = document.createElement('div');
+      coin.className = 'coin';
+      
+      // Posición inicial desde el borde derecho
+      const randomY = Math.random() * (window.innerHeight - 120) + 60;
+      coin.style.top = randomY + 'px';
+      coin.style.right = '-70px';
+      
+      gameContainer.appendChild(coin);
+      
+      const coinData = {
+        element: coin,
+        x: window.innerWidth + 70,
+        y: randomY,
+        speed: 3 + Math.random() * 2,
+        collected: false
+      };
+      
+      gameState.coins.push(coinData);
+      return coinData;
     }
-  }, 25);
 
-  setTimeout(() => coin.remove(), 10000);
-}
+    // Mover monedas de derecha a izquierda
+    function moveCoins() {
+      gameState.coins.forEach((coin, index) => {
+        if (coin.collected) return;
+        
+        coin.x -= coin.speed;
+        coin.element.style.right = (window.innerWidth - coin.x) + 'px';
+        
+        // Eliminar monedas que salieron de la pantalla
+        if (coin.x < -70) {
+          coin.element.remove();
+          gameState.coins.splice(index, 1);
+        }
+      });
+    }
 
-// 🕑 Crea una moneda cada 6 segundos (30 monedas en total durante 180s, pero cortamos a 120s)
-createCoin();
-const coinSpawner = setInterval(() => {
-  if (coinCount < 30 && gameRunning) {
-    createCoin();
-  } else {
-    clearInterval(coinSpawner);
-  }
-}, 6000);
+    // Generador automático de monedas
+    let coinGeneratorInterval;
+    function startCoinGenerator() {
+      coinGeneratorInterval = setInterval(() => {
+        if (!gameState.playing || gameState.paused) return;
+        createCoin();
+      }, 1500); // Nueva moneda cada 1.5 segundos
+    }
 
-// --- MOVIMIENTO DEL AVIÓN ---
-document.addEventListener("keydown", (e) => {
-  if (!gameRunning) return;
-  const speed = 2;
-  if (e.key === "ArrowUp") velocityY = -speed;
-  if (e.key === "ArrowDown") velocityY = speed;
-  if (e.key === "ArrowLeft") velocityX = -speed;
-  if (e.key === "ArrowRight") velocityX = speed;
-  if (e.key === "Escape") endGame();
-});
+    function stopCoinGenerator() {
+      if (coinGeneratorInterval) {
+        clearInterval(coinGeneratorInterval);
+      }
+    }
 
-document.addEventListener("keyup", (e) => {
-  if (["ArrowUp", "ArrowDown"].includes(e.key)) velocityY = 0;
-  if (["ArrowLeft", "ArrowRight"].includes(e.key)) velocityX = 0;
-});
+    // Actualizar posición del avión
+    function updatePlane() {
+      plane.style.left = gameState.planeX + 'px';
+      plane.style.top = gameState.planeY + 'px';
+    }
 
-// --- LOOP DE MOVIMIENTO ---
-function updatePlane() {
-  if (!gameRunning) return;
-  planeY += velocityY * 5;
-  planeX += velocityX * 5;
+    // Detectar colisiones con monedas
+    function checkCoinCollisions() {
+      const planeRect = {
+        x: gameState.planeX,
+        y: gameState.planeY - 40,
+        width: 120,
+        height: 80
+      };
 
-  planeY = Math.max(20, Math.min(window.innerHeight - 100, planeY));
-  planeX = Math.max(0, Math.min(window.innerWidth - 120, planeX));
+      gameState.coins.forEach((coin, index) => {
+        if (coin.collected) return;
 
-  plane.style.top = planeY + "px";
-  plane.style.left = planeX + "px";
+        const coinRect = {
+          x: coin.x - 30,
+          y: coin.y - 30,
+          width: 60,
+          height: 60
+        };
 
-  requestAnimationFrame(updatePlane);
-}
-updatePlane();
+        if (planeRect.x < coinRect.x + coinRect.width &&
+            planeRect.x + planeRect.width > coinRect.x &&
+            planeRect.y < coinRect.y + coinRect.height &&
+            planeRect.y + planeRect.height > coinRect.y) {
+          
+          coin.collected = true;
+          coin.element.classList.add('collected');
+          gameState.coinsCollected++;
+          coinsDisplay.textContent = gameState.coinsCollected;
+          
+          setTimeout(() => {
+            coin.element.remove();
+            gameState.coins.splice(index, 1);
+          }, 500);
+        }
+      });
+    }
 
-// --- CONTADOR DE TIEMPO ---
-const timer = setInterval(() => {
-  if (!gameRunning) return;
-  timeLeft--;
-  timeDisplay.textContent = timeLeft;
-  if (timeLeft <= 0) endGame();
-}, 1000);
+    // Game loop
+    function gameLoop() {
+      if (!gameState.playing || gameState.paused) return;
 
-// --- FIN DEL JUEGO ---
-function endGame() {
-  if (!gameRunning) return;
-  gameRunning = false;
+      // Mover avión
+      if (gameState.keys['ArrowUp'] || gameState.keys['w'] || gameState.keys['W']) {
+        gameState.planeY = Math.max(60, gameState.planeY - gameState.planeSpeed);
+      }
+      if (gameState.keys['ArrowDown'] || gameState.keys['s'] || gameState.keys['S']) {
+        gameState.planeY = Math.min(window.innerHeight - 60, gameState.planeY + gameState.planeSpeed);
+      }
+      if (gameState.keys['ArrowLeft'] || gameState.keys['a'] || gameState.keys['A']) {
+        gameState.planeX = Math.max(60, gameState.planeX - gameState.planeSpeed);
+      }
+      if (gameState.keys['ArrowRight'] || gameState.keys['d'] || gameState.keys['D']) {
+        gameState.planeX = Math.min(window.innerWidth - 60, gameState.planeX + gameState.planeSpeed);
+      }
 
-  clearInterval(timer);
-  clearInterval(coinSpawner);
+      updatePlane();
+      moveCoins();
+      checkCoinCollisions();
+      requestAnimationFrame(gameLoop);
+    }
 
-  endScreen.classList.remove("hidden");
-  finalCoins.textContent = coins;
-}
+    // Temporizador
+    let timerInterval;
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        if (gameState.paused) return;
+        
+        gameState.timeLeft--;
+        timeDisplay.textContent = gameState.timeLeft;
 
-// --- REINICIAR ---
-restartBtn.addEventListener("click", () => window.location.reload());
+        if (gameState.timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    // Iniciar juego
+    function startGame() {
+      gameState.playing = true;
+      gameState.paused = false;
+      gameState.timeLeft = 120;
+      gameState.coinsCollected = 0;
+      gameState.planeX = 100;
+      gameState.planeY = window.innerHeight / 2;
+      gameState.adviceIndex = 0;
+
+      timeDisplay.textContent = gameState.timeLeft;
+      coinsDisplay.textContent = gameState.coinsCollected;
+      adviceText.textContent = adviceMessages[0];
+
+      startScreen.classList.add('hidden');
+      hud.classList.add('visible');
+      advisorContainer.classList.add('visible');
+      
+      updatePlane();
+      startCoinGenerator();
+      startTimer();
+      rotateAdvice();
+      gameLoop();
+    }
+
+    // Pausar juego
+    function pauseGame() {
+      gameState.paused = true;
+      pauseMenu.classList.add('visible');
+    }
+
+    // Continuar juego
+    function continueGame() {
+      gameState.paused = false;
+      pauseMenu.classList.remove('visible');
+      gameLoop();
+    }
+
+    // Reiniciar nivel
+    function restartLevel() {
+      clearInterval(timerInterval);
+      stopCoinGenerator();
+      gameState.coins.forEach(coin => coin.element.remove());
+      gameState.coins = [];
+      pauseMenu.classList.remove('visible');
+      startGame();
+    }
+
+    // Volver al inicio
+    function backToStart() {
+      clearInterval(timerInterval);
+      stopCoinGenerator();
+      gameState.playing = false;
+      gameState.paused = false;
+      gameState.coins.forEach(coin => coin.element.remove());
+      gameState.coins = [];
+      
+      pauseMenu.classList.remove('visible');
+      hud.classList.remove('visible');
+      advisorContainer.classList.remove('visible');
+      startScreen.classList.remove('hidden');
+    }
+
+    // Terminar juego
+    function endGame() {
+      clearInterval(timerInterval);
+      stopCoinGenerator();
+      gameState.playing = false;
+      
+      finalCoinsDisplay.textContent = gameState.coinsCollected;
+      endScreen.classList.remove('hidden');
+      endScreen.classList.add('visible');
+      hud.classList.remove('visible');
+      advisorContainer.classList.remove('visible');
+    }
+
+    // Eventos de teclado
+    document.addEventListener('keydown', (e) => {
+      gameState.keys[e.key] = true;
+
+      if (e.key === 'Escape' && gameState.playing && !gameState.paused) {
+        pauseGame();
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      gameState.keys[e.key] = false;
+    });
+
+    // Eventos de botones
+    startButton.addEventListener('click', startGame);
+    continueButton.addEventListener('click', continueGame);
+    restartLevelButton.addEventListener('click', restartLevel);
+    backButton.addEventListener('click', backToStart);
+    restartButton.addEventListener('click', () => {
+      endScreen.classList.remove('visible');
+      endScreen.classList.add('hidden');
+      restartLevel();
+    });
+
+    // Posicionar avión inicial en el lado izquierdo
+    updatePlane();
